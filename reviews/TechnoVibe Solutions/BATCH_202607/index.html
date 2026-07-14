@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .post-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 28px;
+    }
+    .post-preview {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 16px;
+      background: #111827;
+    }
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .overlay-text {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      background: rgba(255,255,255,0.9);
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 1.15;
+      color: #111827;
+    }
+    .date {
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .caption {
+      line-height: 1.55;
+      color: #374151;
+    }
+    .hashtags {
+      color: #2563eb;
+      font-size: 14px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 90px;
+      margin-top: 16px;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-family: Arial, sans-serif;
+      resize: vertical;
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 11px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      background: #111827;
+      color: white;
+    }
+    button[value="validate"] {
+      background: #16a34a;
+    }
+    @media (max-width: 800px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Vos posts à valider</h1>
+    <p>Voici les posts générés pour le mois. Vous pouvez valider chaque post ou demander une modification.</p>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/file/d/1PrP8TC8OZafnGxJy5scj9OWjhwInDCDj/view?usp=drivesdk" alt="POST_202607_P03" />
+    <div class="overlay-text">Être vu n'est pas être retenu</div>
+  </div>
+
+  <div class="post-content">
+    <p class="date">Date prévue : 2026-07-21</p>
+    <h2>3 signes que vos process freinent votre croissance sans que vous le voyiez.</h2>
+    <p class="caption">Certaines PME grandissent malgré leurs process, pas grâce à eux. Voici trois signaux fréquents chez les entrepreneurs qui gagneraient à structurer davantage leurs opérations. Premier signe : vous répétez sans cesse les mêmes explications à vos équipes parce qu'il n'existe pas de procédure claire. Deuxième signe : les décisions importantes dépendent uniquement de vous, même pour des tâches simples. Troisième signe : vous perdez du temps à chercher des informations qui devraient être centralisées et accessibles facilement. Ces symptômes ne sont pas des fatalités, ce sont des indicateurs qu'un système plus solide pourrait libérer du temps et de l'énergie pour vous concentrer sur la croissance réelle de votre entreprise. Reconnaissez-vous un de ces signes dans votre quotidien ? Partagez votre expérience en commentaire.</p>
+    <p class="hashtags">#SystemesOperationnels #PME #ProductiviteEntreprise #GestionDentreprise #Portland #TechnoVibeSolutions</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P03">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer l’image</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer image + texte</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+  </div>
+</body>
+</html>
