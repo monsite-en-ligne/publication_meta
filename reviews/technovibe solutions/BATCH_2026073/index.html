@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .post-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 28px;
+    }
+    .post-preview {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 16px;
+      background: #111827;
+    }
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .overlay-text {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      background: rgba(255,255,255,0.9);
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 1.15;
+      color: #111827;
+    }
+    .date {
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .caption {
+      line-height: 1.55;
+      color: #374151;
+    }
+    .hashtags {
+      color: #2563eb;
+      font-size: 14px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 90px;
+      margin-top: 16px;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-family: Arial, sans-serif;
+      resize: vertical;
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 11px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      background: #111827;
+      color: white;
+    }
+    button[value="validate"] {
+      background: #16a34a;
+    }
+    @media (max-width: 800px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Vos posts à valider</h1>
+    <p>Voici les posts générés pour le mois. Vous pouvez valider chaque post ou demander une modification.</p>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1BoC5NAAwIMxzS_C9VyqDcncsR50hHYRP&sz=w1200" alt="POST_202607_P01" />
+    <div class="overlay-text">3 erreurs qui freinent votre visibilité</div>
+  </div>
+
+  <div class="post-content">
+    <p class="date">Date prévue : 2026-07-20</p>
+    <h2>3 erreurs de visibilité qui freinent discrètement votre croissance</h2>
+    <p class="caption">Beaucoup d'entrepreneurs travaillent dur sur leur produit mais négligent trois aspects simples de leur visibilité. Premièrement, un message flou qui change selon les plateformes. Deuxièmement, une présence en ligne incohérente qui brouille l'image de marque. Troisièmement, l'absence de suivi des retours clients, qui empêche d'ajuster sa communication. Ces erreurs semblent minimes prises isolément, mais elles s'accumulent et ralentissent la reconnaissance de votre entreprise sur le long terme. La bonne nouvelle, c'est qu'elles se corrigent facilement une fois identifiées. Chez TechnoVibe Solutions, on aide les PME de Portland à repérer ces points de friction avant qu'ils ne deviennent des freins durables. Reconnaître ces erreurs est déjà la première étape pour construire une visibilité plus solide et cohérente. Et vous, laquelle de ces trois erreurs vous parle le plus aujourd'hui ? Dites-le-nous en commentaire.</p>
+    <p class="hashtags">#MarketingPME #VisibiliteMarque #PortlandBusiness #StrategieMarketing #EntrepreneursPortland #ConseilsMarketing</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P01">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer l’image</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer image + texte</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1FyqaSySXk61D2DV3xaKFAn_WcqTGYGn9&sz=w1200" alt="POST_202607_P02" />
+    <div class="overlay-text">3 erreurs qui freinent votre visibilité</div>
+  </div>
+
+  <div class="post-content">
+    <p class="date">Date prévue : 2026-07-22</p>
+    <h2>Une solution marketing standard ne convient jamais vraiment à tout le monde</h2>
+    <p class="caption">On nous demande souvent si nos solutions marketing s'adaptent réellement à des besoins très spécifiques. C'est une question légitime, car chaque PME a son propre contexte, ses propres clients et ses propres contraintes internes. Une approche calquée sur un modèle générique ignore ces différences et finit par produire des résultats moyens, voire décevants. Chez TechnoVibe Solutions, on part toujours du fonctionnement réel de l'entreprise avant de proposer quoi que ce soit. On observe, on pose des questions, on comprend les priorités avant de construire une stratégie sur mesure. Ce n'est pas plus long, c'est simplement plus juste. Cette personnalisation permet d'éviter les efforts marketing dispersés qui ne mènent nulle part. Si vous avez déjà eu l'impression qu'une solution marketing ne correspondait pas à votre réalité, ce n'est probablement pas un hasard. Parlons de votre situation spécifique pour voir ce qui pourrait réellement fonctionner chez vous.</p>
+    <p class="hashtags">#MarketingPersonnalise #PME #StrategieMarketing #Portland #EntrepreneursLocaux #ConseilsBusiness</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P02">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer l’image</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer image + texte</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1SJHs6GR43AwiSGIyHqMPyvbUNooLm2NV&sz=w1200" alt="POST_202607_P03" />
+    <div class="overlay-text">3 erreurs qui freinent votre visibilité</div>
+  </div>
+
+  <div class="post-content">
+    <p class="date">Date prévue : 2026-07-27</p>
+    <h2>Vos opérations internes ralentissent peut-être votre croissance sans que vous le voyiez</h2>
+    <p class="caption">Certains signaux passent inaperçus au quotidien mais révèlent des inefficacités bien réelles. Premier signe, les mêmes questions reviennent sans cesse dans votre équipe parce qu'aucun process clair n'existe. Deuxième signe, les délais s'allongent sans raison apparente, simplement parce que les responsabilités ne sont pas bien réparties. Troisième signe, vos efforts marketing ne suivent pas le rythme de votre activité parce que les outils internes ne sont pas synchronisés. Ces frictions finissent toujours par impacter la visibilité et la croissance de l'entreprise, même si elles semblent d'abord purement internes. Prendre le temps d'observer ces signaux permet souvent d'éviter des blocages plus importants plus tard. Ce n'est pas une question de travailler plus, mais de travailler de façon plus structurée. Repérez-vous l'un de ces signes dans votre organisation actuelle ? Partagez votre expérience en commentaire.</p>
+    <p class="hashtags">#SystemesOperationnels #Productivite #PME #GestionEntreprise #Portland #EfficaciteOperationnelle</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P03">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer l’image</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer image + texte</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1MxTiKiCOwV8q3jcsCpDk8XbzYEj5fJla&sz=w1200" alt="POST_202607_P04" />
+    <div class="overlay-text">3 erreurs qui freinent votre visibilité</div>
+  </div>
+
+  <div class="post-content">
+    <p class="date">Date prévue : 2026-07-29</p>
+    <h2>Portland a sa propre dynamique entrepreneuriale, votre marketing devrait s'y adapter</h2>
+    <p class="caption">Les PME de Portland et de ses environs évoluent dans un contexte particulier, avec des clients qui valorisent la proximité et l'authenticité des entreprises locales. Une stratégie marketing pensée uniquement à partir de modèles génériques passe souvent à côté de ces nuances. Comprendre le tissu entrepreneurial local, c'est aussi comprendre les attentes spécifiques des habitants et des professionnels de la région. Cela influence le ton à adopter, les canaux à privilégier et même le rythme de communication le plus pertinent. Chez TechnoVibe Solutions, cette connaissance du territoire fait partie intégrante de notre façon de construire une stratégie, aux côtés des besoins propres à chaque entreprise. Ce n'est pas un simple argument, c'est une réalité qui influence directement la pertinence des actions marketing menées. Une stratégie ancrée localement a plus de chances de résonner avec votre audience réelle. Et vous, sentez-vous que votre marketing actuel reflète bien votre ancrage local ?</p>
+    <p class="hashtags">#Portland #PME #MarketingLocal #EntrepreneursPortland #StrategieLocale #BusinessOregon</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P04">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer l’image</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer image + texte</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1nouFHDGWm46c-rKVCoT3dg3DaZ1b8PcH&sz=w1200" alt="POST_202607_P05" />
+    <div class="overlay-text">3 erreurs qui freinent votre visibilité</div>
+  </div>
+
+  <div class="post-content">
+    <p class="date">Date prévue : 2026-08-03</p>
+    <h2>Voici comment se construit réellement une stratégie marketing complète</h2>
+    <p class="caption">Une stratégie marketing efficace ne commence jamais par des actions au hasard, elle suit une logique claire. La première étape consiste à analyser la situation actuelle de l'entreprise, ses forces, ses faiblesses et son positionnement. Vient ensuite la définition d'objectifs concrets et réalistes, adaptés à la taille et aux moyens de l'entreprise. La troisième étape consiste à choisir les canaux et les messages les plus pertinents pour toucher la bonne audience. Enfin, le déploiement s'accompagne toujours d'un suivi régulier pour ajuster les actions selon les résultats observés. Chez TechnoVibe Solutions, on applique cette logique étape par étape, sans précipitation, pour construire quelque chose de solide plutôt qu'un plan improvisé. Cette structure permet d'avancer avec plus de clarté et moins d'incertitude. Comprendre ces étapes aide à mieux évaluer où en est votre propre stratégie marketing aujourd'hui.</p>
+    <p class="hashtags">#StrategieMarketing #MarketingPME #PortlandBusiness #CroissanceEntreprise #ConseilsMarketing #TechnoVibe</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P05">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer l’image</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer image + texte</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1koUJERlQ5Ak6Qx4oNK85YWrn_ZWY-YEz&sz=w1200" alt="POST_202607_P06" />
+    <div class="overlay-text">3 erreurs qui freinent votre visibilité</div>
+  </div>
+
+  <div class="post-content">
+    <p class="date">Date prévue : 2026-08-05</p>
+    <h2>Lancer une campagne sans analyse de marché, c'est avancer à l'aveugle</h2>
+    <p class="caption">Beaucoup d'entrepreneurs se lancent dans une campagne marketing avec de bonnes intentions mais peu d'informations concrètes sur leur marché réel. L'analyse de marché permet justement de combler ce manque en apportant des données claires sur les besoins des clients, le positionnement des concurrents et les opportunités encore inexploitées. Sans cette étape, les décisions marketing reposent surtout sur des intuitions, ce qui augmente le risque d'investir du temps et des ressources dans des actions peu efficaces. Avec une analyse solide, chaque choix devient plus argumenté et plus aligné avec la réalité du terrain. Chez TechnoVibe Solutions, cette étape fait partie de nos services complémentaires pour les entreprises qui veulent avancer avec plus de certitude avant de communiquer. Ce n'est pas une formalité, c'est souvent ce qui fait la différence entre une campagne qui fonctionne et une campagne qui passe inaperçue. Avez-vous déjà pris le temps d'analyser votre marché avant votre dernière campagne ?</p>
+    <p class="hashtags">#AnalyseDeMarche #EtudeConcurrentielle #MarketingStrategique #PME #Portland #DecisionMarketing</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P06">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer l’image</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer image + texte</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1aGhBwcq_lANP-F5v9WF1y937Qr6B21p7&sz=w1200" alt="POST_202607_P07" />
+    <div class="overlay-text">3 erreurs qui freinent votre visibilité</div>
+  </div>
+
+  <div class="post-content">
+    <p class="date">Date prévue : 2026-08-10</p>
+    <h2>Attendre que les problèmes surviennent n'a jamais fait avancer une entreprise</h2>
+    <p class="caption">Face aux défis marketing des PME, l'attentisme n'est jamais une bonne stratégie. Chez TechnoVibe Solutions, on préfère anticiper les blocages plutôt que de réagir une fois qu'ils sont installés. Cela veut dire observer les signaux faibles, poser les bonnes questions rapidement et proposer des ajustements avant que les problèmes ne s'aggravent. Cette proactivité change complètement la dynamique d'un accompagnement marketing : on n'attend pas les résultats, on les construit activement, étape après étape. Les entrepreneurs qui avancent le plus vite sont souvent ceux qui s'entourent d'équipes capables de bouger vite avec eux, sans perdre en rigueur. C'est exactement l'état d'esprit qu'on essaie d'incarner au quotidien auprès des PME de Portland et de sa région. Un marketing qui bouge, qui s'ajuste et qui reste toujours tourné vers l'action. Prêt à avancer avec la même énergie sur vos projets marketing ?</p>
+    <p class="hashtags">#Dynamisme #TeamSpirit #MarketingProactif #PME #PortlandBusiness #EnergieEntrepreneuriale</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P07">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer l’image</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer image + texte</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1MClz3fHSHylIWbV19u-Ldi-Hd8huhQaZ&sz=w1200" alt="POST_202607_P08" />
+    <div class="overlay-text">3 erreurs qui freinent votre visibilité</div>
+  </div>
+
+  <div class="post-content">
+    <p class="date">Date prévue : 2026-08-12</p>
+    <h2>Voici comment une stratégie structurée peut transformer le quotidien d'une PME</h2>
+    <p class="caption">Imaginons une PME locale qui communiquait un peu partout sans réelle cohérence, avec un message qui changeait selon les supports. Après avoir structuré sa stratégie marketing, l'entreprise a commencé par clarifier son positionnement et unifier sa communication sur ses principaux canaux. Progressivement, ses clients ont mieux compris son offre et son identité, ce qui a renforcé la confiance et la reconnaissance de la marque. Ce type de progression ne repose pas sur un coup de chance, mais sur une méthode appliquée dans la durée, avec des ajustements réguliers. Ce n'est pas une promesse de résultats garantis, mais une illustration de ce qu'une structuration marketing peut apporter concrètement à une entreprise qui manquait de clarté. Chez TechnoVibe Solutions, c'est ce type d'accompagnement qu'on propose aux PME de Portland qui souhaitent progresser pas à pas. Ce genre de transformation commence toujours par une première étape simple. Curieux de savoir à quoi pourrait ressembler la vôtre ?</p>
+    <p class="hashtags">#CroissancePME #StrategieMarketing #ResultatsConcrets #Portland #TechnoVibe #MarketingStructure</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P08">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer l’image</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer image + texte</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+  </div>
+</body>
+</html>
