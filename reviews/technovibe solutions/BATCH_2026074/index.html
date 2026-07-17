@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts</title>
+  <style>
+    body {
+      margin: 0;
+      font-fami<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts Instagram</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 42px 20px 60px;
+    }
+
+    .page-header {
+      margin-bottom: 34px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.15;
+      color: #111827;
+    }
+
+    .page-header p {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .post-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .post-preview {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #111827;
+      border: 1px solid #e5e7eb;
+    }
+
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-content {
+      padding: 4px 0;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .badge.date {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .badge.status {
+      background: #ecfdf5;
+      color: #166534;
+    }
+
+    .post-content h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 1.25;
+      color: #111827;
+    }
+
+    .integrated-title {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .integrated-title strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+    }
+
+    .caption {
+      margin: 0 0 16px;
+      line-height: 1.6;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .hashtags {
+      margin: 0 0 20px;
+      color: #2563eb;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    form {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #111827;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 17px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      background: #111827;
+      color: white;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    button[value="validate"] {
+      background: #16a34a;
+    }
+
+    button[value="change_image"] {
+      background: #7c3aed;
+    }
+
+    button[value="change_text"] {
+      background: #2563eb;
+    }
+
+    button[value="change_text_image"] {
+      background: #dc2626;
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+
+      .post-preview {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        padding: 28px 14px 46px;
+      }
+
+      .post-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .post-content h2 {
+        font-size: 21px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Vos posts Instagram à valider</h1>
+      <p>
+        Voici les publications statiques générées pour le mois. 
+        Chaque visuel est pensé comme une publication finale prête à être publiée. 
+        Vous pouvez valider chaque post ou demander une modification.
+      </p>
+    </div>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1-kCxhbMh0UPgpg5BwMnEHD8l-OMRElrZ&sz=w1200" alt="POST_202607_P01" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-07-18</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P01</span>
+    </div>
+
+    <h2>3 piliers pour rendre votre marque enfin visible</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers pour une marque visible
+    </div>
+
+    <p class="caption">Une campagne marketing efficace ne repose jamais sur un seul élément isolé. Trois piliers reviennent systématiquement chez les entreprises qui gagnent en visibilité durable. D'abord, un message clair qui répond à un besoin précis de votre audience. Ensuite, une présence cohérente sur les canaux où se trouvent réellement vos clients potentiels. Enfin, un suivi régulier des résultats pour ajuster ce qui fonctionne et abandonner ce qui ne fonctionne pas. Beaucoup de PME investissent du temps et de l'énergie sans structurer ces bases, ce qui rend leurs efforts moins efficaces qu'ils ne pourraient l'être. Prendre le temps de clarifier ces trois éléments avant de lancer une campagne change souvent la donne. Vous voulez savoir où se situe votre entreprise sur ces trois piliers ? Parlons-en ensemble.</p>
+    <p class="hashtags">#MarketingPME #VisibiliteMarque #StrategieMarketing #PortlandBusiness #PME #MarketingDigital</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P01">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=162Q8iys2gL5S1iZfx7BkPfIFtBH3cf5E&sz=w1200" alt="POST_202607_P02" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-07-19</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P02</span>
+    </div>
+
+    <h2>Portland n'est pas un marché comme les autres</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers pour une marque visible
+    </div>
+
+    <p class="caption">Les entrepreneurs de Portland et des environs font face à des défis bien particuliers. La concurrence locale est active, les attentes des clients évoluent vite, et se démarquer demande une vraie compréhension du terrain. Beaucoup de PME de la région partagent les mêmes questionnements : comment toucher les bonnes personnes sans disperser son budget, comment rester visible face à des acteurs plus établis, et comment adapter son message à une communauté qui valorise la proximité et l'authenticité. Ces réalités ne se résolvent pas avec des recettes génériques venues d'ailleurs. Elles demandent une approche qui tient compte du contexte local et des habitudes propres à ce marché. Comprendre son environnement reste la première étape avant toute action marketing. Et vous, quel défi rencontrez-vous le plus souvent dans votre secteur à Portland ?</p>
+    <p class="hashtags">#PortlandBusiness #EntrepreneursPortland #MarcheLocal #PME #OregonBusiness #MarketingLocal</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P02">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1VuhP20v0XtFOKfyVVkLj4MUvZ_L2w98p&sz=w1200" alt="POST_202607_P03" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-07-23</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P03</span>
+    </div>
+
+    <h2>Avant d'investir plus en marketing, structurez ceci</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers pour une marque visible
+    </div>
+
+    <p class="caption">Augmenter son budget marketing sans opérations solides derrière, c'est souvent accélérer le chaos plutôt que la croissance. Trois points méritent d'être vérifiés avant de scaler. Premièrement, assurez-vous que votre équipe peut absorber un afflux de nouveaux prospects sans perdre en qualité de service. Deuxièmement, clarifiez vos processus internes : qui fait quoi, à quel moment, avec quels outils. Troisièmement, mettez en place un système simple pour suivre vos leads du premier contact jusqu'à la conversion, même basique. Sans ces bases, chaque euro investi en visibilité supplémentaire risque de révéler des failles opérationnelles plutôt que de générer une croissance saine. Structurer avant d'accélérer permet d'éviter bien des frustrations. Où en êtes-vous sur ces trois points dans votre entreprise ?</p>
+    <p class="hashtags">#SystemesOperationnels #PME #GestionEntreprise #ScalerSonBusiness #ProductiviteEntreprise #PortlandBusiness</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P03">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1wbVI7NsmeEfM9qqK56jCYataAPHvlgr1&sz=w1200" alt="POST_202607_P04" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-07-25</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P04</span>
+    </div>
+
+    <h2>Vous craignez qu'une solution générique ne colle pas à vos besoins ?</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers d'une marque enfin visible
+    </div>
+
+    <p class="caption">C'est l'une des questions les plus fréquentes qu'on nous pose : comment être sûr qu'une solution marketing correspond vraiment à notre réalité et pas à un modèle standard appliqué à tout le monde. C'est une préoccupation légitime, car chaque PME a ses propres contraintes, son propre marché et ses propres ressources. Notre approche part toujours d'un diagnostic de votre situation actuelle avant de proposer quoi que ce soit. La taille de votre équipe, votre secteur, vos objectifs à court et moyen terme influencent directement les recommandations que nous formulons. Il n'existe pas de formule unique qui fonctionne pour tout le monde, et c'est précisément pourquoi l'écoute précède toujours l'action dans notre façon de travailler. Aucune solution ne peut garantir un résultat identique pour chaque entreprise, mais une approche sur mesure augmente les chances d'aligner marketing et réalité opérationnelle. Envie d'en discuter concrètement pour votre cas ?</p>
+    <p class="hashtags">#SolutionSurMesure #PME #MarketingPersonnalise #ConfianceClient #PortlandBusiness #EntrepreneursPME</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P04">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1vM7SI9hAMbZOWyihj_GCdiYMsLc2aHKz&sz=w1200" alt="POST_202607_P05" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-07-30</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P05</span>
+    </div>
+
+    <h2>Le levier marketing que trop de PME sautent</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers pour une marque visible
+    </div>
+
+    <p class="caption">Beaucoup d'entreprises se lancent directement dans des actions marketing sans avoir pris le temps de comprendre réellement leur marché. Résultat : des campagnes qui ciblent mal, des messages qui ne trouvent pas d'écho, et un budget qui s'épuise sans retour satisfaisant. L'analyse de marché permet d'éviter ce piège en apportant des réponses concrètes avant d'agir. Qui sont réellement vos concurrents directs et indirects ? Quelles attentes vos clients potentiels expriment-ils sans que vous le sachiez encore ? Quelles tendances de votre secteur méritent d'être surveillées de près ? Ces informations, une fois recueillies, permettent de prendre des décisions marketing plus éclairées et d'éviter des investissements qui partent dans la mauvaise direction. Comprendre son marché n'est pas une étape accessoire, c'est souvent ce qui différencie une campagne efficace d'un effort dispersé. Avez-vous déjà pris le temps d'analyser votre marché en profondeur ?</p>
+    <p class="hashtags">#AnalyseDeMarche #EtudeConcurrentielle #PME #StrategieMarketing #PortlandBusiness #CroissanceEntreprise</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P05">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1grfg6VJ7sFSB27jiSdndCwzU-RSopECS&sz=w1200" alt="POST_202607_P06" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-08-01</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P06</span>
+    </div>
+
+    <h2>Avancer vite, mais avancer juste</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers d'une marque visible
+    </div>
+
+    <p class="caption">Les entrepreneurs qui progressent le plus rapidement ne sont pas toujours ceux qui travaillent le plus, mais ceux qui prennent des décisions claires et les exécutent sans attendre la perfection. Cet état d'esprit se retrouve chez de nombreuses PME de Portland qui refusent de rester figées face à l'incertitude. Elles testent, elles ajustent, elles avancent. Ce dynamisme ne signifie pas agir dans la précipitation, mais plutôt refuser l'immobilisme quand une opportunité se présente. En marketing comme en gestion, attendre le moment parfait mène souvent à l'inaction. Les entreprises qui progressent sont celles qui acceptent d'apprendre en marchant, tout en gardant un cap clair. C'est cette énergie que nous aimons retrouver chez les entrepreneurs avec qui nous échangeons. Et vous, qu'est-ce qui vous pousse à avancer cette semaine ?</p>
+    <p class="hashtags">#EtatDEsprit #Entrepreneuriat #PortlandBusiness #Dynamisme #PME #Motivation</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P06">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1v1ZJe-YVNJcUkUk6CDjlV_nfw6beYnE-&sz=w1200" alt="POST_202607_P07" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-08-06</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P07</span>
+    </div>
+
+    <h2>Pourquoi les actions marketing isolées ne suffisent plus</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers pour une marque visible
+    </div>
+
+    <p class="caption">Publier occasionnellement sur les réseaux sociaux, lancer une publicité ponctuelle, refaire son site sans stratégie derrière : ce sont des actions qui, prises isolément, produisent rarement des résultats durables. Le marketing fonctionne mieux quand ses différentes composantes sont pensées ensemble plutôt que traitées séparément. Une approche complète permet d'aligner votre message, vos canaux de diffusion et vos objectifs commerciaux dans une même direction, au lieu de multiplier des efforts qui ne se renforcent pas entre eux. C'est exactement ce que propose notre accompagnement : une vision globale qui structure vos actions marketing plutôt que de les juxtaposer sans cohérence. Cela ne veut pas dire faire plus, mais faire mieux avec ce qui compte réellement pour votre entreprise. Vous sentez que vos actions marketing manquent de cohérence entre elles ? Discutons-en.</p>
+    <p class="hashtags">#MarketingGlobal #StrategieMarketing #PME #SolutionMarketing #PortlandBusiness #CroissanceEntreprise</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P07">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1beWjgWeRcTw1vTkRi81iGS6dG_HC5Kfx&sz=w1200" alt="POST_202607_P08" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-08-08</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P08</span>
+    </div>
+
+    <h2>Comment une PME peut transformer sa visibilité étape par étape</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers pour une marque visible
+    </div>
+
+    <p class="caption">Imaginons une PME de services, présente localement, mais peu visible en dehors de son cercle de clients habituels. Après avoir clarifié son message et structuré sa présence sur les canaux adaptés à son audience, elle commence à apparaître plus régulièrement dans les recherches et discussions de son secteur. Progressivement, de nouveaux prospects la découvrent sans passer uniquement par le bouche-à-oreille, et son équipe consacre moins de temps à expliquer qui elle est, car son positionnement devient plus clair. Ce type de progression ne se produit pas du jour au lendemain, mais résulte d'une structuration cohérente entre message, canaux et suivi des actions. Ce scénario illustre bien ce qu'une approche marketing réfléchie peut apporter, sans magie ni promesse irréaliste. Chaque entreprise avance à son rythme selon sa situation de départ. Votre entreprise a-t-elle déjà vécu une progression similaire ?</p>
+    <p class="hashtags">#CroissanceEntreprise #VisibiliteMarque #PME #MarketingEfficace #PortlandBusiness #ResultatsMarketing</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P08">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+    <p class="footer-note">
+      Une fois un post validé, il sera considéré comme prêt pour la programmation et la publication.
+    </p>
+  </div>
+</body>
+</html>ly: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .post-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 28px;
+    }
+    .post-preview {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 16px;
+      background: #111827;
+    }
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .overlay-text {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      background: rgba(255,255,255,0.9);
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 1.15;
+      color: #111827;
+    }
+    .date {
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .caption {
+      line-height: 1.55;
+      color: #374151;
+    }
+    .hashtags {
+      color: #2563eb;
+      font-size: 14px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 90px;
+      margin-top: 16px;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-family: Arial, sans-serif;
+      resize: vertical;
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 11px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      background: #111827;
+      color: white;
+    }
+    button[value="validate"] {
+      background: #16a34a;
+    }
+    @media (max-width: 800px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Vos posts à valider</h1>
+    <p>Voici les posts générés pour le mois. Vous pouvez valider chaque post ou demander une modification.</p>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1-kCxhbMh0UPgpg5BwMnEHD8l-OMRElrZ&sz=w1200" alt="POST_202607_P01" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-07-18</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P01</span>
+    </div>
+
+    <h2>3 piliers pour rendre votre marque enfin visible</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers pour une marque visible
+    </div>
+
+    <p class="caption">Une campagne marketing efficace ne repose jamais sur un seul élément isolé. Trois piliers reviennent systématiquement chez les entreprises qui gagnent en visibilité durable. D'abord, un message clair qui répond à un besoin précis de votre audience. Ensuite, une présence cohérente sur les canaux où se trouvent réellement vos clients potentiels. Enfin, un suivi régulier des résultats pour ajuster ce qui fonctionne et abandonner ce qui ne fonctionne pas. Beaucoup de PME investissent du temps et de l'énergie sans structurer ces bases, ce qui rend leurs efforts moins efficaces qu'ils ne pourraient l'être. Prendre le temps de clarifier ces trois éléments avant de lancer une campagne change souvent la donne. Vous voulez savoir où se situe votre entreprise sur ces trois piliers ? Parlons-en ensemble.</p>
+    <p class="hashtags">#MarketingPME #VisibiliteMarque #StrategieMarketing #PortlandBusiness #PME #MarketingDigital</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P01">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=162Q8iys2gL5S1iZfx7BkPfIFtBH3cf5E&sz=w1200" alt="POST_202607_P02" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-07-19</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P02</span>
+    </div>
+
+    <h2>Portland n'est pas un marché comme les autres</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers pour une marque visible
+    </div>
+
+    <p class="caption">Les entrepreneurs de Portland et des environs font face à des défis bien particuliers. La concurrence locale est active, les attentes des clients évoluent vite, et se démarquer demande une vraie compréhension du terrain. Beaucoup de PME de la région partagent les mêmes questionnements : comment toucher les bonnes personnes sans disperser son budget, comment rester visible face à des acteurs plus établis, et comment adapter son message à une communauté qui valorise la proximité et l'authenticité. Ces réalités ne se résolvent pas avec des recettes génériques venues d'ailleurs. Elles demandent une approche qui tient compte du contexte local et des habitudes propres à ce marché. Comprendre son environnement reste la première étape avant toute action marketing. Et vous, quel défi rencontrez-vous le plus souvent dans votre secteur à Portland ?</p>
+    <p class="hashtags">#PortlandBusiness #EntrepreneursPortland #MarcheLocal #PME #OregonBusiness #MarketingLocal</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P02">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1VuhP20v0XtFOKfyVVkLj4MUvZ_L2w98p&sz=w1200" alt="POST_202607_P03" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-07-23</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P03</span>
+    </div>
+
+    <h2>Avant d'investir plus en marketing, structurez ceci</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers pour une marque visible
+    </div>
+
+    <p class="caption">Augmenter son budget marketing sans opérations solides derrière, c'est souvent accélérer le chaos plutôt que la croissance. Trois points méritent d'être vérifiés avant de scaler. Premièrement, assurez-vous que votre équipe peut absorber un afflux de nouveaux prospects sans perdre en qualité de service. Deuxièmement, clarifiez vos processus internes : qui fait quoi, à quel moment, avec quels outils. Troisièmement, mettez en place un système simple pour suivre vos leads du premier contact jusqu'à la conversion, même basique. Sans ces bases, chaque euro investi en visibilité supplémentaire risque de révéler des failles opérationnelles plutôt que de générer une croissance saine. Structurer avant d'accélérer permet d'éviter bien des frustrations. Où en êtes-vous sur ces trois points dans votre entreprise ?</p>
+    <p class="hashtags">#SystemesOperationnels #PME #GestionEntreprise #ScalerSonBusiness #ProductiviteEntreprise #PortlandBusiness</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P03">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1wbVI7NsmeEfM9qqK56jCYataAPHvlgr1&sz=w1200" alt="POST_202607_P04" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-07-25</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P04</span>
+    </div>
+
+    <h2>Vous craignez qu'une solution générique ne colle pas à vos besoins ?</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers d'une marque enfin visible
+    </div>
+
+    <p class="caption">C'est l'une des questions les plus fréquentes qu'on nous pose : comment être sûr qu'une solution marketing correspond vraiment à notre réalité et pas à un modèle standard appliqué à tout le monde. C'est une préoccupation légitime, car chaque PME a ses propres contraintes, son propre marché et ses propres ressources. Notre approche part toujours d'un diagnostic de votre situation actuelle avant de proposer quoi que ce soit. La taille de votre équipe, votre secteur, vos objectifs à court et moyen terme influencent directement les recommandations que nous formulons. Il n'existe pas de formule unique qui fonctionne pour tout le monde, et c'est précisément pourquoi l'écoute précède toujours l'action dans notre façon de travailler. Aucune solution ne peut garantir un résultat identique pour chaque entreprise, mais une approche sur mesure augmente les chances d'aligner marketing et réalité opérationnelle. Envie d'en discuter concrètement pour votre cas ?</p>
+    <p class="hashtags">#SolutionSurMesure #PME #MarketingPersonnalise #ConfianceClient #PortlandBusiness #EntrepreneursPME</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P04">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1vM7SI9hAMbZOWyihj_GCdiYMsLc2aHKz&sz=w1200" alt="POST_202607_P05" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-07-30</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P05</span>
+    </div>
+
+    <h2>Le levier marketing que trop de PME sautent</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers pour une marque visible
+    </div>
+
+    <p class="caption">Beaucoup d'entreprises se lancent directement dans des actions marketing sans avoir pris le temps de comprendre réellement leur marché. Résultat : des campagnes qui ciblent mal, des messages qui ne trouvent pas d'écho, et un budget qui s'épuise sans retour satisfaisant. L'analyse de marché permet d'éviter ce piège en apportant des réponses concrètes avant d'agir. Qui sont réellement vos concurrents directs et indirects ? Quelles attentes vos clients potentiels expriment-ils sans que vous le sachiez encore ? Quelles tendances de votre secteur méritent d'être surveillées de près ? Ces informations, une fois recueillies, permettent de prendre des décisions marketing plus éclairées et d'éviter des investissements qui partent dans la mauvaise direction. Comprendre son marché n'est pas une étape accessoire, c'est souvent ce qui différencie une campagne efficace d'un effort dispersé. Avez-vous déjà pris le temps d'analyser votre marché en profondeur ?</p>
+    <p class="hashtags">#AnalyseDeMarche #EtudeConcurrentielle #PME #StrategieMarketing #PortlandBusiness #CroissanceEntreprise</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P05">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1grfg6VJ7sFSB27jiSdndCwzU-RSopECS&sz=w1200" alt="POST_202607_P06" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-08-01</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P06</span>
+    </div>
+
+    <h2>Avancer vite, mais avancer juste</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers d'une marque visible
+    </div>
+
+    <p class="caption">Les entrepreneurs qui progressent le plus rapidement ne sont pas toujours ceux qui travaillent le plus, mais ceux qui prennent des décisions claires et les exécutent sans attendre la perfection. Cet état d'esprit se retrouve chez de nombreuses PME de Portland qui refusent de rester figées face à l'incertitude. Elles testent, elles ajustent, elles avancent. Ce dynamisme ne signifie pas agir dans la précipitation, mais plutôt refuser l'immobilisme quand une opportunité se présente. En marketing comme en gestion, attendre le moment parfait mène souvent à l'inaction. Les entreprises qui progressent sont celles qui acceptent d'apprendre en marchant, tout en gardant un cap clair. C'est cette énergie que nous aimons retrouver chez les entrepreneurs avec qui nous échangeons. Et vous, qu'est-ce qui vous pousse à avancer cette semaine ?</p>
+    <p class="hashtags">#EtatDEsprit #Entrepreneuriat #PortlandBusiness #Dynamisme #PME #Motivation</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P06">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1v1ZJe-YVNJcUkUk6CDjlV_nfw6beYnE-&sz=w1200" alt="POST_202607_P07" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-08-06</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P07</span>
+    </div>
+
+    <h2>Pourquoi les actions marketing isolées ne suffisent plus</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers pour une marque visible
+    </div>
+
+    <p class="caption">Publier occasionnellement sur les réseaux sociaux, lancer une publicité ponctuelle, refaire son site sans stratégie derrière : ce sont des actions qui, prises isolément, produisent rarement des résultats durables. Le marketing fonctionne mieux quand ses différentes composantes sont pensées ensemble plutôt que traitées séparément. Une approche complète permet d'aligner votre message, vos canaux de diffusion et vos objectifs commerciaux dans une même direction, au lieu de multiplier des efforts qui ne se renforcent pas entre eux. C'est exactement ce que propose notre accompagnement : une vision globale qui structure vos actions marketing plutôt que de les juxtaposer sans cohérence. Cela ne veut pas dire faire plus, mais faire mieux avec ce qui compte réellement pour votre entreprise. Vous sentez que vos actions marketing manquent de cohérence entre elles ? Discutons-en.</p>
+    <p class="hashtags">#MarketingGlobal #StrategieMarketing #PME #SolutionMarketing #PortlandBusiness #CroissanceEntreprise</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P07">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1beWjgWeRcTw1vTkRi81iGS6dG_HC5Kfx&sz=w1200" alt="POST_202607_P08" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-08-08</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P08</span>
+    </div>
+
+    <h2>Comment une PME peut transformer sa visibilité étape par étape</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 piliers pour une marque visible
+    </div>
+
+    <p class="caption">Imaginons une PME de services, présente localement, mais peu visible en dehors de son cercle de clients habituels. Après avoir clarifié son message et structuré sa présence sur les canaux adaptés à son audience, elle commence à apparaître plus régulièrement dans les recherches et discussions de son secteur. Progressivement, de nouveaux prospects la découvrent sans passer uniquement par le bouche-à-oreille, et son équipe consacre moins de temps à expliquer qui elle est, car son positionnement devient plus clair. Ce type de progression ne se produit pas du jour au lendemain, mais résulte d'une structuration cohérente entre message, canaux et suivi des actions. Ce scénario illustre bien ce qu'une approche marketing réfléchie peut apporter, sans magie ni promesse irréaliste. Chaque entreprise avance à son rythme selon sa situation de départ. Votre entreprise a-t-elle déjà vécu une progression similaire ?</p>
+    <p class="hashtags">#CroissanceEntreprise #VisibiliteMarque #PME #MarketingEfficace #PortlandBusiness #ResultatsMarketing</p>
+
+    <form method="POST" action="WEBHOOK_URL">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P08">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+  </div>
+</body>
+</html>
