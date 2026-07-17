@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts Instagram</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 42px 20px 60px;
+    }
+
+    .page-header {
+      margin-bottom: 34px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.15;
+      color: #111827;
+    }
+
+    .page-header p {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .post-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .post-preview {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #111827;
+      border: 1px solid #e5e7eb;
+    }
+
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-content {
+      padding: 4px 0;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .badge.date {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .badge.status {
+      background: #ecfdf5;
+      color: #166534;
+    }
+
+    .post-content h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 1.25;
+      color: #111827;
+    }
+
+    .integrated-title {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .integrated-title strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+    }
+
+    .caption {
+      margin: 0 0 16px;
+      line-height: 1.6;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .hashtags {
+      margin: 0 0 20px;
+      color: #2563eb;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    form {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #111827;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 17px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      background: #111827;
+      color: white;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    button[value="validate"] {
+      background: #16a34a;
+    }
+
+    button[value="change_image"] {
+      background: #7c3aed;
+    }
+
+    button[value="change_text"] {
+      background: #2563eb;
+    }
+
+    button[value="change_text_image"] {
+      background: #dc2626;
+    }
+
+    .form-status {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .form-status.sending {
+      display: block;
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .form-status.success {
+      display: block;
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .form-status.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+
+      .post-preview {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        padding: 28px 14px 46px;
+      }
+
+      .post-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .post-content h2 {
+        font-size: 21px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Vos posts Instagram à valider</h1>
+      <p>
+        Voici les publications statiques générées pour le mois.
+        Chaque visuel est pensé comme une publication finale prête à être publiée.
+        Vous pouvez valider chaque post ou demander une modification.
+      </p>
+    </div>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1Ybu6-0x_j-G2E4DZMl2-uSNLYFnrdbZg&sz=w1200" alt="POST_202607_P01" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 46223</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P01</span>
+    </div>
+
+    <h2>Votre marque envoie peut-être ces 3 signaux d'alerte</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 signaux d'alerte de votre marque
+    </div>
+
+    <p class="caption">Un trafic qui stagne, des mentions de votre entreprise qui se font rares, une reconnaissance locale qui peine à décoller. Ces trois signes passent souvent inaperçus, mais ils en disent long sur la visibilité réelle d'une marque. Beaucoup d'entrepreneurs les remarquent trop tard, une fois que l'impact commence à se faire sentir sur l'activité. La bonne nouvelle, c'est qu'un simple diagnostic permet d'y voir clair avant d'agir dans la précipitation. Prendre le temps d'observer ces indicateurs, c'est déjà poser les bases d'une stratégie plus efficace. Et vous, avez-vous déjà repéré l'un de ces signaux dans votre activité ? Partagez votre expérience en commentaire, ça peut aider d'autres entrepreneurs à y voir plus clair.</p>
+    <p class="hashtags">#MarketingPME #VisibiliteMarque #Entrepreneuriat #StrategieMarketing #Portland #PME #BusinessLocal</p>
+
+    <form class="validation-form" method="POST" action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P01">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1oL3M5o01g5yL54hBSie_XcmuXsFXo1yB&sz=w1200" alt="POST_202607_P02" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 46225</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P02</span>
+    </div>
+
+    <h2>Avant de lancer une campagne, posez-vous cette question</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Avant de lancer votre campagne, vérifiez ceci
+    </div>
+
+    <p class="caption">Lancer une campagne marketing sans base opérationnelle solide, c'est un peu comme construire sur du sable. Beaucoup d'entrepreneurs se précipitent sur la communication sans avoir clarifié leurs processus internes, et cela finit par limiter les résultats. Voici une checklist simple à vérifier avant de vous lancer : vos process de suivi client sont-ils clairs, votre équipe sait-elle qui fait quoi, et vos outils actuels vous permettent-ils de gérer une hausse de demandes. Trois questions qui paraissent basiques, mais qui font toute la différence une fois la campagne lancée. Une structure solide permet de profiter pleinement des opportunités générées par le marketing, sans être débordé. Et vous, où en êtes-vous sur ces trois points ? Dites-le-nous en commentaire.</p>
+    <p class="hashtags">#SystemesOperationnels #GestionPME #Entrepreneuriat #OrganisationEntreprise #MarketingStrategie #Portland</p>
+
+    <form class="validation-form" method="POST" action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P02">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1QBD1R7RXyoQ2Y7evIWM3o3RSv11M0nqZ&sz=w1200" alt="POST_202607_P03" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 46230</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P03</span>
+    </div>
+
+    <h2>Et si aucune solution générique ne vous convenait vraiment</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Aucune solution générique ne vous convient vraiment
+    </div>
+
+    <p class="caption">C'est une inquiétude légitime et qu'on entend souvent : comment être sûr qu'une solution marketing correspond réellement aux besoins spécifiques de son entreprise. La réalité, c'est qu'il n'existe pas d'approche universelle qui fonctionne pour tout le monde. Chez TechnoVibe Solutions, chaque accompagnement commence par une compréhension approfondie de votre activité, de vos objectifs et de vos contraintes concrètes. Ce n'est qu'à partir de cette base que des solutions sont proposées, ajustées à votre réalité et non à un modèle standard. Cette étape d'écoute permet d'éviter les stratégies génériques qui ne tiennent pas compte des spécificités de chaque entreprise. Vous avez des questions sur la façon dont une approche pourrait s'adapter à votre situation ? N'hésitez pas à nous les poser en message privé.</p>
+    <p class="hashtags">#MarketingPersonnalise #PME #StrategieMarketing #Entrepreneuriat #ConfianceClient #Portland</p>
+
+    <form class="validation-form" method="POST" action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P03">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=10lQBCyzCsX651BRPxrD4nnNEFNjgdGJy&sz=w1200" alt="POST_202607_P04" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 46232</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P04</span>
+    </div>
+
+    <h2>Les PME de Portland n'attendent pas tout à fait la même chose</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Portland n'attend pas la même chose
+    </div>
+
+    <p class="caption">Chaque région a ses propres dynamiques, et Portland ne fait pas exception. Les entrepreneurs locaux ont souvent une approche différente de leur communication, plus attachée à la proximité et à l'authenticité qu'à des campagnes standardisées. Cette sensibilité se ressent dans la façon dont les consommateurs de la région perçoivent les marques qui prennent le temps de comprendre leur environnement. Travailler avec des PME de Portland et ses environs, c'est aussi tenir compte de ces nuances locales dans la stratégie marketing, plutôt que d'appliquer une méthode générique venue d'ailleurs. C'est cette proximité qui permet souvent de construire une relation de confiance durable avec sa clientèle. Vous sentez-vous concerné par cette réalité locale ? Dites-nous ce que vous en pensez en commentaire.</p>
+    <p class="hashtags">#Portland #PMEPortland #MarketingLocal #Entrepreneuriat #Proximite #BusinessLocal</p>
+
+    <form class="validation-form" method="POST" action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P04">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1fB-VeQAzfxknHyJfUXzqEvFewNHhYNlM&sz=w1200" alt="POST_202607_P05" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 46237</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P05</span>
+    </div>
+
+    <h2>Une solution marketing complète, ça ressemble à quoi concrètement</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Une solution complète, 4 étapes claires
+    </div>
+
+    <p class="caption">On parle souvent de solutions marketing complètes sans expliquer ce que cela recouvre réellement. Chez TechnoVibe Solutions, l'accompagnement commence par une phase de compréhension de votre activité et de vos objectifs. Vient ensuite la construction d'une stratégie adaptée, qui prend en compte vos ressources et votre marché. La mise en œuvre se fait progressivement, avec des ajustements réguliers selon les retours observés sur le terrain. Enfin, un suivi permet de garder une vision claire de ce qui fonctionne et de ce qui mérite d'être affiné. Cette approche structurée évite les décisions prises à l'aveugle et permet une progression cohérente dans le temps. Vous voulez en savoir plus sur cette approche appliquée à votre situation ? Envoyez-nous un message pour en discuter.</p>
+    <p class="hashtags">#SolutionMarketing #PME #Entrepreneuriat #StrategieMarketing #Portland #CroissanceEntreprise</p>
+
+    <form class="validation-form" method="POST" action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P05">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=18MOB-l8tP_coMJpkWlnc-nB-wKhgkdPE&sz=w1200" alt="POST_202607_P06" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 46239</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P06</span>
+    </div>
+
+    <h2>Investir en communication sans analyse de marché, un vrai risque</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Sans analyse, votre message rate sa cible
+    </div>
+
+    <p class="caption">Se lancer dans une campagne de communication sans avoir étudié son marché, c'est prendre le risque de parler à la mauvaise audience ou de mal positionner son offre. L'analyse de marché permet justement d'éviter ce type d'erreur en apportant une vision plus claire de la concurrence, des attentes des clients potentiels et des opportunités à saisir. Concrètement, cela aide à orienter les décisions avant d'investir du temps et des ressources en communication. Une PME qui prend le temps de comprendre son environnement avant d'agir se donne de meilleures chances de construire une stratégie pertinente et durable. C'est un travail en amont qui paie souvent sur le long terme. Vous avez déjà réalisé une analyse de marché pour votre activité ? Partagez votre expérience en commentaire.</p>
+    <p class="hashtags">#AnalyseDeMarche #PME #StrategieEntreprise #Entrepreneuriat #Portland #EtudeConcurrentielle</p>
+
+    <form class="validation-form" method="POST" action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P06">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1Uhxh22Z5xD2EmRWtW0geyQvG1iB6TV7K&sz=w1200" alt="POST_202607_P07" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 46244</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P07</span>
+    </div>
+
+    <h2>Voici à quoi ressemble une progression marketing bien menée</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Une progression construite, pas improvisée
+    </div>
+
+    <p class="caption">Prenons un exemple type, sans chiffres ni promesse de résultat garanti. Une PME décide de structurer sa communication après plusieurs mois d'actions dispersées sans réelle ligne directrice. La première étape consiste à clarifier son positionnement et à mieux comprendre son audience. Ensuite, une stratégie cohérente est mise en place sur plusieurs canaux, avec des ajustements réguliers selon les retours obtenus. Au fil des semaines, la marque gagne en clarté et en reconnaissance auprès de son public, ce qui se traduit progressivement par plus d'engagement et de visibilité. Ce type de progression demande du temps et de la constance, mais il illustre bien l'intérêt d'une approche structurée plutôt qu'improvisée. Vous souhaitez échanger sur votre propre situation ? Contactez-nous pour en discuter.</p>
+    <p class="hashtags">#StrategieMarketing #CroissanceEntreprise #PME #Entrepreneuriat #Portland #VisibiliteMarque</p>
+
+    <form class="validation-form" method="POST" action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P07">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1L7xNT0mG_OyibVgCnQQy36qV4izkB2M4&sz=w1200" alt="POST_202607_P08" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 46246</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P08</span>
+    </div>
+
+    <h2>Chez TechnoVibe, on n'attend pas que les problèmes s'installent</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      On agit avant que les problèmes s'installent
+    </div>
+
+    <p class="caption">Les défis marketing des entrepreneurs évoluent vite, et rester réactif fait toute la différence. L'équipe TechnoVibe Solutions travaille au quotidien avec une énergie tournée vers l'action : anticiper les blocages, ajuster les stratégies rapidement et rester disponible pour répondre aux questions concrètes de chaque client. Cette posture proactive permet d'éviter que les difficultés ne s'installent durablement et de garder le cap sur les objectifs fixés ensemble. C'est aussi cette dynamique qui rend l'accompagnement plus fluide et plus humain, loin des process rigides et impersonnels. Travailler avec des entrepreneurs demande de la souplesse, et c'est exactement ce que nous mettons en pratique chaque jour. Envie de rencontrer une équipe qui avance à votre rythme ? Écrivez-nous pour en parler.</p>
+    <p class="hashtags">#EquipeDynamique #Entrepreneuriat #MarketingPME #Portland #Reactivite #BusinessLocal</p>
+
+    <form class="validation-form" method="POST" action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0">
+      <input type="hidden" name="client_id" value="131JUJ116QTQ-kfGw2dmKxhcTQxwIJ1t4XEQ9qP5oz08">
+      <input type="hidden" name="post_id" value="POST_202607_P08">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260710_173621">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="validate">Valider</button>
+        <button type="submit" name="action" value="change_image">Changer le visuel</button>
+        <button type="submit" name="action" value="change_text">Changer le texte</button>
+        <button type="submit" name="action" value="change_text_image">Changer texte + visuel</button>
+      </div>
+
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+
+    <p class="footer-note">
+      Une fois un post validé, il sera considéré comme prêt pour la programmation et la publication.
+    </p>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const forms = document.querySelectorAll(".post-card form");
+
+      forms.forEach(function (form) {
+        let statusBox = form.querySelector(".form-status");
+
+        if (!statusBox) {
+          statusBox = document.createElement("div");
+          statusBox.className = "form-status";
+          form.appendChild(statusBox);
+        }
+
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const clickedButton = event.submitter;
+          const action = clickedButton ? clickedButton.value : "";
+          const formData = new FormData(form);
+
+          formData.set("action", action);
+
+          const textarea = form.querySelector("textarea");
+          const buttons = form.querySelector(".buttons");
+          const allButtons = form.querySelectorAll("button");
+          const statusBadge = form.closest(".post-card").querySelector(".badge.status");
+
+          allButtons.forEach(function (button) {
+            button.disabled = true;
+            button.style.opacity = "0.6";
+            button.style.cursor = "not-allowed";
+          });
+
+          statusBox.innerHTML = "Envoi en cours...";
+          statusBox.className = "form-status sending";
+
+          fetch(form.action, {
+            method: "POST",
+            body: formData,
+            mode: "no-cors"
+          })
+          .then(function () {
+            if (textarea) {
+              textarea.style.display = "none";
+            }
+
+            if (buttons) {
+              buttons.style.display = "none";
+            }
+
+            if (action === "validate") {
+              statusBox.innerHTML = "Post validé ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Validé";
+              }
+            } else {
+              statusBox.innerHTML = "Demande envoyée ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Modification demandée";
+              }
+            }
+
+            statusBox.className = "form-status success";
+          })
+          .catch(function () {
+            allButtons.forEach(function (button) {
+              button.disabled = false;
+              button.style.opacity = "1";
+              button.style.cursor = "pointer";
+            });
+
+            statusBox.innerHTML = "Une erreur est survenue. Merci de réessayer.";
+            statusBox.className = "form-status error";
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
