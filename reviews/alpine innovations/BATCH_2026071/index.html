@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts Instagram</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 42px 20px 60px;
+    }
+
+    .page-header {
+      margin-bottom: 34px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.15;
+      color: #111827;
+    }
+
+    .page-header p {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .post-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .post-preview {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #111827;
+      border: 1px solid #e5e7eb;
+    }
+
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-content {
+      padding: 4px 0;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .badge.date {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .badge.status {
+      background: #ecfdf5;
+      color: #166534;
+    }
+
+    .badge.remaining {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .post-content h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 1.25;
+      color: #111827;
+    }
+
+    .integrated-title {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .integrated-title strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+    }
+
+    .caption {
+      margin: 0 0 16px;
+      line-height: 1.6;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .hashtags {
+      margin: 0 0 20px;
+      color: #2563eb;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    form {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #111827;
+    }
+
+    textarea:disabled {
+      background: #f3f4f6;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 17px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      background: #111827;
+      color: white;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    button[data-action="validate"] {
+      background: #16a34a;
+    }
+
+    button[data-action="change_image"] {
+      background: #7c3aed;
+    }
+
+    button[data-action="change_text"] {
+      background: #2563eb;
+    }
+
+    button[data-action="change_text_image"] {
+      background: #dc2626;
+    }
+
+    .button-disabled,
+    button:disabled {
+      background: #d1d5db !important;
+      color: #6b7280 !important;
+      cursor: not-allowed !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .modification-note {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .modification-note.visible {
+      display: block;
+    }
+
+    .form-status {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .form-status.sending {
+      display: block;
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .form-status.success {
+      display: block;
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .form-status.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+
+      .post-preview {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        padding: 28px 14px 46px;
+      }
+
+      .post-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .post-content h2 {
+        font-size: 21px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Vos posts Instagram à valider</h1>
+      <p>
+        Voici les publications statiques générées pour le mois.
+        Chaque visuel est pensé comme une publication finale prête à être publiée.
+        Vous pouvez valider chaque post ou demander une modification.
+      </p>
+    </div>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=15_8LQgeGErDh0IpNOALvFX2-_iWXMsxa&sz=w1200" alt="POST_202607_P01" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-08-04</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P01</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Ce que vous ne voyez pas avant qu'un produit arrive entre vos mains</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Ce que vous ne voyez jamais avant
+    </div>
+
+    <p class="caption">Derrière chaque création, il y a une succession d'étapes qu'on ne voit pas toujours sur une photo finale. La sélection des matériaux, les ajustements, les finitions faites à la main, chaque détail demande du temps et de l'attention. C'est justement cette patience qui donne au produit fini sa qualité et son caractère unique. On a parfois tendance à comparer un objet artisanal à un objet produit en série, alors que le processus n'a rien à voir. Prendre le temps de bien faire les choses, c'est aussi une façon de respecter le travail et les personnes qui l'utiliseront ensuite. On aime partager ces coulisses parce qu'elles expliquent beaucoup de choses sur la valeur réelle d'un produit fait main. Et vous, aviez-vous déjà pensé à toutes ces étapes avant de tenir un objet artisanal entre vos mains ? Dites-nous en commentaire.</p>
+    <p class="hashtags">#artisanat #faitmain #savoirfaire #madeinmontana #produitartisanal #processcreatif</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="17jG9B0n4UUc7pi9_awTRM7x3sfiY9V0ay0UC_k9mPlI">
+      <input type="hidden" name="post_id" value="POST_202607_P01">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260729_113401">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1fHkoYhBdf1Aj93hIJYX27xOQ89LJzk1V&sz=w1200" alt="POST_202607_P02" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-08-06</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P02</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Petit budget ne rime pas forcément avec petits résultats</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Petit budget, grande précision, vrais résultats
+    </div>
+
+    <p class="caption">On entend souvent la même inquiétude : avec un budget limité, est-ce qu'on peut vraiment avoir un accompagnement de qualité ? La réponse est plus nuancée qu'on le pense. Un budget serré demande simplement d'adapter la stratégie, de prioriser les actions qui ont le plus d'impact et d'éviter de disperser les efforts sur trop de fronts en même temps. Ce n'est pas le prix qui garantit un bon résultat, c'est la clarté des objectifs et la cohérence des actions mises en place. Beaucoup d'entreprises en croissance pensent qu'elles doivent tout faire en même temps alors qu'avancer étape par étape donne souvent de meilleurs résultats sur la durée. L'important est de comprendre où concentrer son énergie en premier. Si vous vous reconnaissez dans cette situation, n'hésitez pas à nous écrire pour en discuter ensemble.</p>
+    <p class="hashtags">#strategiedigitale #petitbudget #communicationdigitale #reseauxsociaux #croissanceentreprise #conseilsdigitaux</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="17jG9B0n4UUc7pi9_awTRM7x3sfiY9V0ay0UC_k9mPlI">
+      <input type="hidden" name="post_id" value="POST_202607_P02">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260729_113401">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1RKcwhQ1D1PZp3M4V3FT7wUMzfHaDSWyI&sz=w1200" alt="POST_202607_P03" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-08-11</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P03</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Être vu et être choisi, ce n'est pas la même chose</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Être vu n'est pas être choisi
+    </div>
+
+    <p class="caption">Beaucoup d'entreprises confondent deux notions pourtant bien distinctes : la visibilité et la conversion. La visibilité, c'est le nombre de personnes qui voient votre contenu, qui likent ou qui commentent. La conversion, c'est ce qui se passe après, quand une personne décide de vous contacter, d'acheter ou de s'engager plus loin avec votre marque. On peut avoir beaucoup de visibilité sans forcément générer des actions concrètes, et inversement, une audience plus restreinte mais bien ciblée peut convertir davantage. C'est pour ça qu'une stratégie de contenu efficace ne se limite pas à publier souvent, elle doit aussi guider les abonnés vers une action claire, adaptée à leurs besoins. Comprendre cette différence permet de mieux orienter ses efforts et d'éviter de se décourager face à des chiffres qui ne racontent pas toute l'histoire. Et vous, aviez-vous déjà fait la distinction entre ces deux objectifs ?</p>
+    <p class="hashtags">#reseauxsociaux #strategiecontenu #visibilite #conversion #communicationdigitale #education</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="17jG9B0n4UUc7pi9_awTRM7x3sfiY9V0ay0UC_k9mPlI">
+      <input type="hidden" name="post_id" value="POST_202607_P03">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260729_113401">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1c67-VQNcn3FlJr6hns9Io_S3vqNwMKV4&sz=w1200" alt="POST_202607_P04" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-08-13</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P04</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Le calme de la campagne, un ingrédient discret de nos créations</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Le calme rural, ingrédient discret de nos créations
+    </div>
+
+    <p class="caption">Travailler dans un cadre rural, loin de l'agitation, change vraiment la façon d'aborder un travail artisanal. Le rythme est différent, plus posé, ce qui laisse le temps de soigner chaque détail sans précipitation. Ce cadre nous permet de rester concentrés sur l'essentiel, la qualité du geste et l'attention portée à chaque création. On considère souvent la ruralité comme une contrainte, mais pour nous, c'est plutôt un atout qui influence directement notre façon de travailler. C'est aussi ce qui nous permet de garder une approche authentique, loin des cadences imposées par la production de masse. Ce lien avec notre environnement fait partie intégrante de notre identité et de la manière dont on conçoit chaque produit. On est curieux de savoir ce qui vous attire, vous, dans les produits fabriqués en dehors des grandes villes.</p>
+    <p class="hashtags">#artisanatrural #madeinmontana #authenticite #savoirfaire #faitmain #campagne</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="17jG9B0n4UUc7pi9_awTRM7x3sfiY9V0ay0UC_k9mPlI">
+      <input type="hidden" name="post_id" value="POST_202607_P04">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260729_113401">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1mu4BD9Hzq4Rhz9PdhGSxujVXp-3uBGMU&sz=w1200" alt="POST_202607_P05" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-08-18</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P05</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Avant de publier, il faut savoir qui vous êtes vraiment</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Qui êtes-vous vraiment avant de publier
+    </div>
+
+    <p class="caption">Publier du contenu sans avoir défini une identité de marque claire, c'est un peu comme construire une maison sans plan. On peut avancer, mais on finit souvent par revenir en arrière pour tout ajuster. Une stratégie de marque permet justement de poser les bases avant de créer quoi que ce soit : le ton à utiliser, les valeurs à transmettre, les messages qui comptent vraiment pour votre audience. Sans cette base, les contenus peuvent sembler incohérents d'une publication à l'autre, ce qui complique la construction d'une image claire dans l'esprit des abonnés. Prendre le temps de définir cette identité en amont permet d'éviter de perdre du temps et de l'énergie sur des contenus qui ne servent pas vraiment vos objectifs. C'est un travail qui demande de la réflexion, mais qui simplifie énormément tout ce qui vient après. Si vous hésitez encore sur votre positionnement, on peut en discuter ensemble.</p>
+    <p class="hashtags">#strategiedemarque #identitedemarque #creationdecontenu #communicationdigitale #entreprisesencroissance #conseils</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="17jG9B0n4UUc7pi9_awTRM7x3sfiY9V0ay0UC_k9mPlI">
+      <input type="hidden" name="post_id" value="POST_202607_P05">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260729_113401">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1WxAvt6sv3RJVX_YwtRz1Ekfim1RpRoJa&sz=w1200" alt="POST_202607_P06" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-08-20</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P06</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un délai bien pensé, c'est souvent la clé d'un bon résultat</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Le bon délai protège la qualité
+    </div>
+
+    <p class="caption">On a tendance à penser qu'aller plus vite garantit d'aller plus loin, mais ce n'est pas toujours vrai. Que ce soit pour un produit artisanal ou une stratégie de contenu, précipiter les choses finit souvent par nuire à la qualité du résultat final. Un délai réaliste laisse le temps de bien réfléchir, de tester, d'ajuster et de corriger avant de livrer un travail abouti. C'est une étape qu'on essaie toujours d'expliquer clairement dès le départ, pour éviter les malentendus et les attentes irréalistes. Prendre ce temps, ce n'est pas ralentir pour ralentir, c'est protéger la qualité de ce qui est produit, que ce soit un objet ou une stratégie digitale. On préfère être transparents sur ces délais plutôt que de promettre quelque chose d'impossible à tenir. Est-ce que ce sujet des délais vous parle dans votre propre activité ? Partagez votre expérience en commentaire.</p>
+    <p class="hashtags">#transparence #delaisrealistes #qualitedetravail #artisanat #strategiedigitale #confiance</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="17jG9B0n4UUc7pi9_awTRM7x3sfiY9V0ay0UC_k9mPlI">
+      <input type="hidden" name="post_id" value="POST_202607_P06">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260729_113401">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1vUjQfcXKmHqY0xUw2cs41QOyi6HE_uQD&sz=w1200" alt="POST_202607_P07" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-08-25</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P07</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Trois vérifications rapides avant d'appuyer sur publier</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Trois vérifications avant de publier
+    </div>
+
+    <p class="caption">Avant de publier un post, quelques vérifications simples peuvent faire une vraie différence sur la qualité perçue de votre contenu. D'abord, relisez votre texte à voix haute pour repérer les tournures maladroites ou les fautes qui passent inaperçues à l'écrit. Ensuite, vérifiez que votre visuel est net et bien cadré, même une photo prise avec un téléphone peut donner un rendu propre si la lumière et le cadrage sont soignés. Enfin, assurez-vous que votre message contient une idée claire et un appel à l'action, même discret, pour donner envie à votre audience d'interagir. Ces trois étapes prennent quelques minutes mais évitent beaucoup d'erreurs qui peuvent nuire à l'image d'une petite entreprise. Ce n'est pas une question de compétence technique, juste de méthode. Et vous, quelle est votre astuce avant de publier un contenu ? Partagez-la avec nous.</p>
+    <p class="hashtags">#conseilsreseauxsociaux #creationdecontenu #astucespratiques #communicationdigitale #petiteentreprise #contenuefficace</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="17jG9B0n4UUc7pi9_awTRM7x3sfiY9V0ay0UC_k9mPlI">
+      <input type="hidden" name="post_id" value="POST_202607_P07">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260729_113401">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=10sifQH5Lm-5FCJUYVcBxCYzmaYaC0yDY&sz=w1200" alt="POST_202607_P08" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-08-27</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202607_P08</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Une progression pas à pas, sans changement du jour au lendemain</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Une progression pas à pas, sans précipitation
+    </div>
+
+    <p class="caption">On accompagne depuis quelques mois une entreprise qui souhaitait améliorer sa présence en ligne, sans attentes irréalistes ni promesses de résultats immédiats. Le travail a commencé par une analyse simple de ce qui fonctionnait déjà et de ce qui pouvait être amélioré, puis par des ajustements progressifs dans la régularité des publications et la clarté des messages. Petit à petit, l'engagement de la communauté a évolué, les échanges avec les abonnés sont devenus plus naturels et la cohérence de la marque plus visible. Ce genre de transformation ne se fait pas en quelques semaines, elle demande du suivi, des ajustements réguliers et de la patience des deux côtés. C'est justement cette approche progressive qui permet d'obtenir des résultats solides et durables, plutôt que des effets ponctuels qui ne tiennent pas dans le temps. Si vous vous demandez à quoi pourrait ressembler ce type d'accompagnement pour votre entreprise, contactez-nous pour en parler.</p>
+    <p class="hashtags">#gestionreseauxsociaux #resultatsconcrets #accompagnementdigital #croissanceprogressive #communicationdigitale #confiance</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="17jG9B0n4UUc7pi9_awTRM7x3sfiY9V0ay0UC_k9mPlI">
+      <input type="hidden" name="post_id" value="POST_202607_P08">
+      <input type="hidden" name="batch_id" value="BATCH_202607">
+      <input type="hidden" name="token" value="20260729_113401">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+
+    <p class="footer-note">
+      Une fois un post validé, il sera considéré comme prêt pour la programmation et la publication.
+    </p>
+  </div>
+
+  <iframe name="hidden_webhook_frame" style="display:none;"></iframe>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const forms = document.querySelectorAll(".validation-form");
+
+      function pluralizeRemaining(remaining) {
+        if (remaining > 1) {
+          return remaining + " modifications restantes";
+        }
+        if (remaining === 1) {
+          return "1 modification restante";
+        }
+        return "0 modification restante";
+      }
+
+      function applyModificationState(form) {
+        const version = parseInt(form.getAttribute("data-version") || "1", 10);
+        const remaining = Math.max(0, 2 - version);
+
+        const textarea = form.querySelector("textarea");
+        const remainingBadge = form.querySelector(".remaining-badge");
+        const modificationButtons = form.querySelectorAll(".modification-button");
+        const modificationNote = form.querySelector(".modification-note");
+
+        if (remainingBadge) {
+          remainingBadge.textContent = pluralizeRemaining(remaining);
+        }
+
+        modificationButtons.forEach(function (button) {
+          const baseLabel = button.getAttribute("data-base-label") || button.textContent.trim();
+          button.textContent = baseLabel + " (" + remaining + ")";
+
+          if (remaining === 0) {
+            button.disabled = true;
+            button.classList.add("button-disabled");
+          } else {
+            button.disabled = false;
+            button.classList.remove("button-disabled");
+          }
+        });
+
+        if (remaining === 0) {
+          if (textarea) {
+            textarea.disabled = true;
+            textarea.placeholder = "Aucune modification automatique restante pour ce post.";
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.add("visible");
+            modificationNote.innerHTML = "Ce post a déjà utilisé sa modification automatique. Vous pouvez encore le valider, mais les boutons de modification sont désormais désactivés.";
+          }
+        } else {
+          if (textarea) {
+            textarea.disabled = false;
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.remove("visible");
+          }
+        }
+
+        return remaining;
+      }
+
+      forms.forEach(function (form) {
+        let statusBox = form.querySelector(".form-status");
+
+        if (!statusBox) {
+          statusBox = document.createElement("div");
+          statusBox.className = "form-status";
+          form.appendChild(statusBox);
+        }
+
+        const actionInput = form.querySelector('input[name="action"]');
+        const actionButtons = form.querySelectorAll("button[data-action]");
+
+        applyModificationState(form);
+
+        actionButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            if (actionInput) {
+              actionInput.value = button.getAttribute("data-action");
+            }
+          });
+        });
+
+        form.addEventListener("submit", function (event) {
+          const action = actionInput ? actionInput.value : "";
+          const remaining = applyModificationState(form);
+
+          if (action !== "validate" && remaining === 0) {
+            event.preventDefault();
+            statusBox.innerHTML = "Aucune modification automatique restante pour ce post.";
+            statusBox.className = "form-status error";
+            return;
+          }
+
+          const textarea = form.querySelector("textarea");
+          const buttons = form.querySelector(".buttons");
+          const allButtons = form.querySelectorAll("button");
+          const statusBadge = form.closest(".post-card").querySelector(".badge.status");
+
+          statusBox.innerHTML = "Envoi en cours...";
+          statusBox.className = "form-status sending";
+
+          setTimeout(function () {
+            allButtons.forEach(function (button) {
+              button.disabled = true;
+              button.style.opacity = "0.6";
+              button.style.cursor = "not-allowed";
+            });
+          }, 50);
+
+          setTimeout(function () {
+            if (textarea) {
+              textarea.style.display = "none";
+            }
+
+            if (buttons) {
+              buttons.style.display = "none";
+            }
+
+            const modificationNote = form.querySelector(".modification-note");
+            if (modificationNote) {
+              modificationNote.style.display = "none";
+            }
+
+            if (action === "validate") {
+              statusBox.innerHTML = "Post validé ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Validé";
+              }
+            } else {
+              statusBox.innerHTML = "Demande envoyée ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Modification demandée";
+              }
+
+              const remainingBadge = form.querySelector(".remaining-badge");
+              if (remainingBadge) {
+                remainingBadge.textContent = "0 modification restante";
+              }
+            }
+
+            statusBox.className = "form-status success";
+          }, 900);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
