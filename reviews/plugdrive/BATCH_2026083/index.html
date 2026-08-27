@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts Instagram</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 42px 20px 60px;
+    }
+
+    .page-header {
+      margin-bottom: 34px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.15;
+      color: #111827;
+    }
+
+    .page-header p {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .post-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .post-preview {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #111827;
+      border: 1px solid #e5e7eb;
+    }
+
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-content {
+      padding: 4px 0;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .badge.date {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .badge.status {
+      background: #ecfdf5;
+      color: #166534;
+    }
+
+    .badge.remaining {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .post-content h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 1.25;
+      color: #111827;
+    }
+
+    .integrated-title {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .integrated-title strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+    }
+
+    .caption {
+      margin: 0 0 16px;
+      line-height: 1.6;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .hashtags {
+      margin: 0 0 20px;
+      color: #2563eb;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    form {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #111827;
+    }
+
+    textarea:disabled {
+      background: #f3f4f6;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 17px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      background: #111827;
+      color: white;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    button[data-action="validate"] {
+      background: #16a34a;
+    }
+
+    button[data-action="change_image"] {
+      background: #7c3aed;
+    }
+
+    button[data-action="change_text"] {
+      background: #2563eb;
+    }
+
+    button[data-action="change_text_image"] {
+      background: #dc2626;
+    }
+
+    .button-disabled,
+    button:disabled {
+      background: #d1d5db !important;
+      color: #6b7280 !important;
+      cursor: not-allowed !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .modification-note {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .modification-note.visible {
+      display: block;
+    }
+
+    .form-status {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .form-status.sending {
+      display: block;
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .form-status.success {
+      display: block;
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .form-status.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+
+      .post-preview {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        padding: 28px 14px 46px;
+      }
+
+      .post-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .post-content h2 {
+        font-size: 21px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Vos posts Instagram à valider</h1>
+      <p>
+        Voici les publications statiques générées pour le mois.
+        Chaque visuel est pensé comme une publication finale prête à être publiée.
+        Vous pouvez valider chaque post ou demander une modification.
+      </p>
+    </div>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1R1s1K42EfQIdMybh2ptdrna8q3XVJZ-D&sz=w1200" alt="POST_202608_P01" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-09-01</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202608_P01</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Comment un simple boîtier transforme votre vieille voiture en modèle connecté</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Le mécanisme simple du CarPlay universel
+    </div>
+
+    <p class="caption">Derrière le SmartConnect, il y a une mécanique simple mais bien pensée. Un écran, un boîtier de connexion, et une alimentation via l'allume-cigare : voilà les trois éléments qui permettent à votre téléphone de communiquer avec l'écran, sans câble compliqué ni installation lourde. Concrètement, votre smartphone envoie les informations de navigation, musique ou appels, et le boîtier les retransmet en quelques secondes sur l'écran fixé à votre tableau de bord. Pas besoin d'un véhicule récent ni d'un système multimédia intégré. C'est cette logique qui permet à des véhicules plus anciens d'accéder à une expérience de conduite plus moderne et plus sûre. Comprendre le fonctionnement, c'est aussi mieux savoir ce que vous installez dans votre voiture. Des questions sur le fonctionnement exact ? On répond en commentaire.</p>
+    <p class="hashtags">#Plugdrive #CarPlay #Connectivité #TechnologieAuto #ConduiteConnectée #InnovationAuto #SmartConnect</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="16oqiyshGunJ3Cp1uT2lCTkesoOXZu9w8ZJE9ZNGr_Jc">
+      <input type="hidden" name="post_id" value="POST_202608_P01">
+      <input type="hidden" name="batch_id" value="BATCH_202608">
+      <input type="hidden" name="token" value="20260827_113726">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=17mgePN9o2iZXxdjZVys3nEa11RAHZ3D9&sz=w1200" alt="POST_202608_P02" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-09-03</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202608_P02</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un souci avec votre SmartConnect ? Voici exactement ce qui se passe</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Notre SAV, étape par étape
+    </div>
+
+    <p class="caption">On sait qu'une garantie floue ne rassure personne. C'est pour ça qu'on préfère détailler notre process plutôt que de vous promettre une prise en charge vague. En cas de problème, la démarche est claire : vous nous contactez, on réalise un diagnostic précis pour identifier l'origine du souci, puis on procède soit à une réparation, soit à un remplacement selon le cas. Chaque étape est suivie et communiquée, sans zone d'ombre. Cette transparence fait partie de notre façon de travailler, parce qu'un produit technique mérite un accompagnement tout aussi sérieux. Notre objectif, c'est que vous sachiez précisément à quoi vous attendre avant même d'en avoir besoin. Vous avez une question sur notre SAV ? N'hésitez pas à nous écrire.</p>
+    <p class="hashtags">#Plugdrive #SAV #Garantie #ConfianceClient #ServiceClient #SmartConnect #FiabilitéAuto</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="16oqiyshGunJ3Cp1uT2lCTkesoOXZu9w8ZJE9ZNGr_Jc">
+      <input type="hidden" name="post_id" value="POST_202608_P02">
+      <input type="hidden" name="batch_id" value="BATCH_202608">
+      <input type="hidden" name="token" value="20260827_113726">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1s5C5tH9z6pWO5eU0xtvZ-pgZ5kHlhiJ4&sz=w1200" alt="POST_202608_P03" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-09-08</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202608_P03</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>7h45, direction le travail, et Waze déjà lancé sans toucher au téléphone</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      7h45, direction le travail, sans y toucher
+    </div>
+
+    <p class="caption">Un trajet classique, celui que beaucoup répètent chaque matin. Waze lancé, itinéraire affiché en grand sur l'écran, appels gérés en mains libres : rien de spectaculaire, mais tout devient plus fluide. Pas besoin de manipuler le téléphone à chaque feu rouge ou de le poser en équilibre sur le tableau de bord. Le SmartConnect prend le relais dès le démarrage du véhicule et affiche ce dont on a besoin, au bon endroit. C'est ce genre de détail qui change réellement le quotidien au volant, sans bouleverser les habitudes de conduite. Une utilisation simple, pensée pour des trajets bien réels. Et vous, à quoi ressemble votre trajet du matin ?</p>
+    <p class="hashtags">#Plugdrive #SmartConnect #TrajetQuotidien #ConduiteSereine #CarPlayUniversel #GPSVoiture #ConfortDeConduite</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="16oqiyshGunJ3Cp1uT2lCTkesoOXZu9w8ZJE9ZNGr_Jc">
+      <input type="hidden" name="post_id" value="POST_202608_P03">
+      <input type="hidden" name="batch_id" value="BATCH_202608">
+      <input type="hidden" name="token" value="20260827_113726">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=13_22ly0YXdOgSrIfBfGBVacN55qbGVkx&sz=w1200" alt="POST_202608_P04" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-09-10</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202608_P04</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Pendant que le marché mise sur le neuf, on a choisi de s'occuper des anciens véhicules</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      On s'occupe des véhicules qu'on oublie
+    </div>
+
+    <p class="caption">La majorité des solutions de connectivité automobile sont pensées pour les véhicules récents, laissant de côté tous ceux qui roulent encore avec des modèles plus anciens mais parfaitement fonctionnels. C'est ce constat qui a guidé la conception du SmartConnect : proposer une solution accessible, sans obliger personne à changer de voiture pour profiter d'un peu plus de confort et de sécurité au volant. Notre approche part d'un principe simple, un véhicule ancien n'a pas à être exclu des avancées technologiques utiles au quotidien. C'est cette conviction qui structure chacun de nos développements produit. Une vision qu'on assume et qu'on continue de défendre au fil de nos évolutions. Curieux de comprendre notre démarche plus en détail ? On en parle en commentaire.</p>
+    <p class="hashtags">#Plugdrive #ExpertiseAuto #VéhiculesAnciens #InnovationAccessible #SmartConnect #MobilitéConnectée #MadeForEveryone</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="16oqiyshGunJ3Cp1uT2lCTkesoOXZu9w8ZJE9ZNGr_Jc">
+      <input type="hidden" name="post_id" value="POST_202608_P04">
+      <input type="hidden" name="batch_id" value="BATCH_202608">
+      <input type="hidden" name="token" value="20260827_113726">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1_Na4hYGWc8AbdrLEX9Mrcd_oq9aF46Jn&sz=w1200" alt="POST_202608_P05" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-09-15</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202608_P05</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Pas d'outil, pas de garagiste, juste trois étapes pour tout installer</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Trois étapes, zéro outil, zéro garagiste
+    </div>
+
+    <p class="caption">C'est souvent la première question qu'on nous pose, est-ce compliqué à installer. La réponse est non, et on préfère le montrer plutôt que l'affirmer. Première étape, fixer l'écran sur le support prévu à cet effet. Deuxième étape, brancher le boîtier sur l'allume-cigare. Troisième étape, connecter votre téléphone en Bluetooth ou via câble selon votre préférence. Aucun perçage, aucun démontage du tableau de bord, aucune compétence technique particulière requise. L'idée derrière le SmartConnect, c'est justement de rendre la technologie accessible sans passer par un garage ou un professionnel. Une installation pensée pour être faite par n'importe qui, en quelques minutes. Des doutes sur votre configuration précise ? Posez-nous la question.</p>
+    <p class="hashtags">#Plugdrive #InstallationFacile #SmartConnect #CarPlayUniversel #SansOutil #ConduiteConnectée #SimplicitéAvantTout</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="16oqiyshGunJ3Cp1uT2lCTkesoOXZu9w8ZJE9ZNGr_Jc">
+      <input type="hidden" name="post_id" value="POST_202608_P05">
+      <input type="hidden" name="batch_id" value="BATCH_202608">
+      <input type="hidden" name="token" value="20260827_113726">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1gj1afxsPdz5FeOzzkod-cJPnAy7qhjhX&sz=w1200" alt="POST_202608_P06" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-09-17</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202608_P06</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>5 centimètres de différence qui changent tout votre champ de vision au volant</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      5 centimètres qui changent votre champ de vision
+    </div>
+
+    <p class="caption">Un téléphone posé sur le tableau de bord semble pratique, mais son positionnement bas et son angle souvent mal ajusté obligent à baisser le regard plus longtemps que nécessaire. L'écran du SmartConnect, lui, est fixé à hauteur plus adaptée et orienté directement vers le conducteur, ce qui réduit le temps passé les yeux hors de la route. Ce n'est pas une question de confort superficiel, mais bien d'ergonomie appliquée à la conduite. Un écran bien positionné permet une lecture plus rapide des informations, donc un retour plus rapide vers la route. Ces détails, souvent négligés, ont pourtant un vrai impact sur la vigilance au quotidien. On continue d'explorer ces sujets avec vous, dites-nous ce que vous aimeriez qu'on aborde ensuite.</p>
+    <p class="hashtags">#Plugdrive #SécuritéRoutière #Ergonomie #ConduiteVigilante #SmartConnect #ConfortDeConduite #TechnologieAuto</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="16oqiyshGunJ3Cp1uT2lCTkesoOXZu9w8ZJE9ZNGr_Jc">
+      <input type="hidden" name="post_id" value="POST_202608_P06">
+      <input type="hidden" name="batch_id" value="BATCH_202608">
+      <input type="hidden" name="token" value="20260827_113726">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1yeGV50kaa8OYvL-ccf_RzrfV5qEipXl4&sz=w1200" alt="POST_202608_P07" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-09-22</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202608_P07</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Musique, appels, navigation : ce que l'écran du SmartConnect affiche vraiment</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Musique, appels, navigation : tout à l'écran
+    </div>
+
+    <p class="caption">Au-delà de l'aspect technique, ce qui compte, c'est l'usage réel de l'interface au quotidien. Sur l'écran du SmartConnect, vous retrouvez les fonctionnalités essentielles, la navigation avec votre application préférée, la gestion des appels en mains libres, l'accès à la musique et la lecture des messages sans avoir à toucher votre téléphone. Une interface pensée pour être claire et rapide à prendre en main, même pour ceux qui ne sont pas particulièrement à l'aise avec la technologie. L'objectif n'est pas d'ajouter des fonctions superflues, mais de rassembler l'essentiel au bon endroit, avec une lisibilité pensée pour la conduite. C'est cette simplicité qui fait toute la différence une fois installée dans votre véhicule. Envie de voir l'interface en action ? Restez connectés pour la suite.</p>
+    <p class="hashtags">#Plugdrive #SmartConnect #InterfaceIntuitive #CarPlayUniversel #ConduiteConnectée #ExpérienceUtilisateur #ConfortDeConduite</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="16oqiyshGunJ3Cp1uT2lCTkesoOXZu9w8ZJE9ZNGr_Jc">
+      <input type="hidden" name="post_id" value="POST_202608_P07">
+      <input type="hidden" name="batch_id" value="BATCH_202608">
+      <input type="hidden" name="token" value="20260827_113726">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1O4y4_hRy0ZR111FCYWyxQpZGS68P42rR&sz=w1200" alt="POST_202608_P08" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-09-24</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202608_P08</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Universel, ça veut dire quoi exactement ? On vous explique sans jargon</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Universel ça veut dire quoi exactement
+    </div>
+
+    <p class="caption">Le mot universel revient souvent, mais il mérite d'être expliqué concrètement plutôt que simplement affirmé. Pour le SmartConnect, la compatibilité repose sur trois critères techniques précis, une alimentation standard en 12V présente dans la quasi-totalité des véhicules, une connexion Bluetooth compatible avec la grande majorité des smartphones, et une taille d'écran pensée pour s'adapter à différents types de tableaux de bord. Ce sont ces éléments techniques, et non une simple liste de modèles, qui garantissent une compatibilité large et fiable. Comprendre ces critères permet de savoir exactement pourquoi le produit fonctionne avec votre véhicule, sans se fier à une promesse abstraite. La transparence technique reste notre meilleur argument. Une question sur la compatibilité avec votre véhicule ? On est là pour y répondre.</p>
+    <p class="hashtags">#Plugdrive #Compatibilité #SmartConnect #CarPlayUniversel #FiabilitéTechnique #Bluetooth #TransparenceTechnique</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="16oqiyshGunJ3Cp1uT2lCTkesoOXZu9w8ZJE9ZNGr_Jc">
+      <input type="hidden" name="post_id" value="POST_202608_P08">
+      <input type="hidden" name="batch_id" value="BATCH_202608">
+      <input type="hidden" name="token" value="20260827_113726">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+
+    <p class="footer-note">
+      Une fois un post validé, il sera considéré comme prêt pour la programmation et la publication.
+    </p>
+  </div>
+
+  <iframe name="hidden_webhook_frame" style="display:none;"></iframe>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const forms = document.querySelectorAll(".validation-form");
+
+      function pluralizeRemaining(remaining) {
+        if (remaining > 1) {
+          return remaining + " modifications restantes";
+        }
+        if (remaining === 1) {
+          return "1 modification restante";
+        }
+        return "0 modification restante";
+      }
+
+      function applyModificationState(form) {
+        const version = parseInt(form.getAttribute("data-version") || "1", 10);
+        const remaining = Math.max(0, 2 - version);
+
+        const textarea = form.querySelector("textarea");
+        const remainingBadge = form.querySelector(".remaining-badge");
+        const modificationButtons = form.querySelectorAll(".modification-button");
+        const modificationNote = form.querySelector(".modification-note");
+
+        if (remainingBadge) {
+          remainingBadge.textContent = pluralizeRemaining(remaining);
+        }
+
+        modificationButtons.forEach(function (button) {
+          const baseLabel = button.getAttribute("data-base-label") || button.textContent.trim();
+          button.textContent = baseLabel + " (" + remaining + ")";
+
+          if (remaining === 0) {
+            button.disabled = true;
+            button.classList.add("button-disabled");
+          } else {
+            button.disabled = false;
+            button.classList.remove("button-disabled");
+          }
+        });
+
+        if (remaining === 0) {
+          if (textarea) {
+            textarea.disabled = true;
+            textarea.placeholder = "Aucune modification automatique restante pour ce post.";
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.add("visible");
+            modificationNote.innerHTML = "Ce post a déjà utilisé sa modification automatique. Vous pouvez encore le valider, mais les boutons de modification sont désormais désactivés.";
+          }
+        } else {
+          if (textarea) {
+            textarea.disabled = false;
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.remove("visible");
+          }
+        }
+
+        return remaining;
+      }
+
+      forms.forEach(function (form) {
+        let statusBox = form.querySelector(".form-status");
+
+        if (!statusBox) {
+          statusBox = document.createElement("div");
+          statusBox.className = "form-status";
+          form.appendChild(statusBox);
+        }
+
+        const actionInput = form.querySelector('input[name="action"]');
+        const actionButtons = form.querySelectorAll("button[data-action]");
+
+        applyModificationState(form);
+
+        actionButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            if (actionInput) {
+              actionInput.value = button.getAttribute("data-action");
+            }
+          });
+        });
+
+        form.addEventListener("submit", function (event) {
+          const action = actionInput ? actionInput.value : "";
+          const remaining = applyModificationState(form);
+
+          if (action !== "validate" && remaining === 0) {
+            event.preventDefault();
+            statusBox.innerHTML = "Aucune modification automatique restante pour ce post.";
+            statusBox.className = "form-status error";
+            return;
+          }
+
+          const textarea = form.querySelector("textarea");
+          const buttons = form.querySelector(".buttons");
+          const allButtons = form.querySelectorAll("button");
+          const statusBadge = form.closest(".post-card").querySelector(".badge.status");
+
+          statusBox.innerHTML = "Envoi en cours...";
+          statusBox.className = "form-status sending";
+
+          setTimeout(function () {
+            allButtons.forEach(function (button) {
+              button.disabled = true;
+              button.style.opacity = "0.6";
+              button.style.cursor = "not-allowed";
+            });
+          }, 50);
+
+          setTimeout(function () {
+            if (textarea) {
+              textarea.style.display = "none";
+            }
+
+            if (buttons) {
+              buttons.style.display = "none";
+            }
+
+            const modificationNote = form.querySelector(".modification-note");
+            if (modificationNote) {
+              modificationNote.style.display = "none";
+            }
+
+            if (action === "validate") {
+              statusBox.innerHTML = "Post validé ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Validé";
+              }
+            } else {
+              statusBox.innerHTML = "Demande envoyée ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Modification demandée";
+              }
+
+              const remainingBadge = form.querySelector(".remaining-badge");
+              if (remainingBadge) {
+                remainingBadge.textContent = "0 modification restante";
+              }
+            }
+
+            statusBox.className = "form-status success";
+          }, 900);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
