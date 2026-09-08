@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts Instagram</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 42px 20px 60px;
+    }
+
+    .page-header {
+      margin-bottom: 34px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.15;
+      color: #111827;
+    }
+
+    .page-header p {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .post-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .post-preview {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #111827;
+      border: 1px solid #e5e7eb;
+    }
+
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-content {
+      padding: 4px 0;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .badge.date {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .badge.status {
+      background: #ecfdf5;
+      color: #166534;
+    }
+
+    .badge.remaining {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .post-content h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 1.25;
+      color: #111827;
+    }
+
+    .integrated-title {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .integrated-title strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+    }
+
+    .caption {
+      margin: 0 0 16px;
+      line-height: 1.6;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .hashtags {
+      margin: 0 0 20px;
+      color: #2563eb;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    form {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #111827;
+    }
+
+    textarea:disabled {
+      background: #f3f4f6;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 17px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      background: #111827;
+      color: white;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    button[data-action="validate"] {
+      background: #16a34a;
+    }
+
+    button[data-action="change_image"] {
+      background: #7c3aed;
+    }
+
+    button[data-action="change_text"] {
+      background: #2563eb;
+    }
+
+    button[data-action="change_text_image"] {
+      background: #dc2626;
+    }
+
+    .button-disabled,
+    button:disabled {
+      background: #d1d5db !important;
+      color: #6b7280 !important;
+      cursor: not-allowed !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .modification-note {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .modification-note.visible {
+      display: block;
+    }
+
+    .form-status {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .form-status.sending {
+      display: block;
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .form-status.success {
+      display: block;
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .form-status.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+
+      .post-preview {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        padding: 28px 14px 46px;
+      }
+
+      .post-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .post-content h2 {
+        font-size: 21px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Vos posts Instagram à valider</h1>
+      <p>
+        Voici les publications statiques générées pour le mois.
+        Chaque visuel est pensé comme une publication finale prête à être publiée.
+        Vous pouvez valider chaque post ou demander une modification.
+      </p>
+    </div>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1TKcj1_VXqHR-snwX61yHVRHvyvW20KyY&sz=w1200" alt="POST_202609_P01" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-09-15</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P01</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>L'IA, ce n'est pas réservé aux grandes entreprises</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      L'automatisation n'est pas réservée aux grandes boîtes
+    </div>
+
+    <p class="caption">On entend souvent la même phrase : « l'automatisation, c'est sûrement pour des boîtes plus grosses que la mienne ». C'est l'inverse. Notre cœur de cible, ce sont les TPE et PME de 2 à 50 salariés, celles où chaque heure gagnée compte double parce qu'il n'y a pas un service entier dédié à l'administratif ou au suivi client. Un exemple simple : un artisan qui reçoit des demandes de devis par mail ou téléphone peut avoir une automatisation qui centralise ces demandes, les trie et prépare une réponse type, sans changer sa façon de travailler. Pas besoin d'un service informatique ni d'un gros budget pour commencer. Le pré-audit gratuit sert justement à repérer ce qui, dans votre quotidien, mérite d'être allégé. Vous voulez savoir ce qui pourrait être automatisé chez vous ? Parlons-en.</p>
+    <p class="hashtags">#TPE #PME #IntelligenceArtificielle #Automatisation #DigitalTPE #Digigo #GainDeTemps</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="15kyYzpJizoE1Mq3stenhkMFRtZGiY3npPjndfIpAKGw">
+      <input type="hidden" name="post_id" value="POST_202609_P01">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260908_174433">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1dgu8trdFpCzvxzKgfrXu2VD_-YEqMZte&sz=w1200" alt="POST_202609_P02" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-09-17</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P02</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Combien de temps passez-vous à relancer vos devis ?</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Vos devis dorment. Vos clients attendent
+    </div>
+
+    <p class="caption">Un dirigeant type commence sa journée par les mails urgents, puis enchaîne les rendez-vous, et se dit qu'il relancera les devis en attente « plus tard dans la semaine ». Sauf que plus tard, c'est rarement maintenant. Résultat : des factures qui traînent, des devis oubliés et un chiffre d'affaires qui dort dans des dossiers non suivis. Une automatisation sur-mesure peut prendre en charge ce suivi : détecter les devis sans réponse après un certain délai, envoyer une relance personnalisée et alerter uniquement quand une action humaine est vraiment nécessaire. Ce n'est pas un outil générique, c'est construit autour de vos process actuels, vos délais, votre façon de communiquer. Le temps récupéré peut alors servir à autre chose que courir après les paiements. Envie de savoir ce que ça donnerait pour votre activité ?</p>
+    <p class="hashtags">#Automatisation #RelanceClient #GestionTPE #ProductivitéPME #Digigo #OutilsIA</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="15kyYzpJizoE1Mq3stenhkMFRtZGiY3npPjndfIpAKGw">
+      <input type="hidden" name="post_id" value="POST_202609_P02">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260908_174433">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1flXrsImCDGuCmMp8bk-Opm4Vr8iA9uPx&sz=w1200" alt="POST_202609_P03" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-09-22</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P03</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Ce qui se passe vraiment pendant un pré-audit gratuit</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Ce qui se passe pendant le pré-audit
+    </div>
+
+    <p class="caption">Beaucoup hésitent à demander un pré-audit par peur de tomber sur un rendez-vous de vente déguisé. Concrètement, voici ce qui se passe : un échange d'environ 30 à 45 minutes où l'on parle de votre activité, de votre organisation actuelle et des tâches qui vous pèsent au quotidien. Pas besoin d'arriver avec une idée précise, c'est justement notre travail d'identifier avec vous les premiers leviers concrets. À la fin, vous repartez avec des pistes claires sur ce qui pourrait être automatisé ou pris en charge par un agent IA, sans obligation de donner suite. Aucun engagement, aucune pression, juste un état des lieux honnête de votre situation. C'est une porte d'entrée pensée pour éclairer une décision, pas pour la forcer. Vous voulez voir ce que ça donnerait pour votre entreprise ?</p>
+    <p class="hashtags">#PréAudit #MéthodeDigigo #TPE #PME #Automatisation #ConseilDigital</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="15kyYzpJizoE1Mq3stenhkMFRtZGiY3npPjndfIpAKGw">
+      <input type="hidden" name="post_id" value="POST_202609_P03">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260908_174433">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1-RkEkzQtOAbNGJL1J6u5ECrjROwdVjlb&sz=w1200" alt="POST_202609_P04" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-09-24</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P04</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Qui gère vos avis Google en ce moment ?</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Qui gère vos avis Google en ce moment ?
+    </div>
+
+    <p class="caption">Pour un commerce ou un cabinet, la fiche établissement Google est souvent le premier contact avec un client potentiel. Le problème, c'est qu'entre les rendez-vous et le quotidien, personne n'a le temps de publier régulièrement ou de répondre à chaque avis. C'est exactement ce que prend en charge l'agent Google : il publie des posts sur votre fiche établissement et répond aux avis clients, qu'ils soient positifs ou plus délicats, avec un ton adapté à votre activité. L'objectif n'est pas de remplacer votre voix, mais de garantir une présence continue là où beaucoup de prospects regardent avant de vous contacter. Pour un commerce de proximité ou un cabinet qui reçoit du public, ça représente un temps non négligeable récupéré chaque semaine. Vous voulez voir à quoi ça ressemblerait pour votre fiche établissement ?</p>
+    <p class="hashtags">#AgentIA #GoogleMyBusiness #AvisClients #Automatisation #Digigo #VisibilitéLocale</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="15kyYzpJizoE1Mq3stenhkMFRtZGiY3npPjndfIpAKGw">
+      <input type="hidden" name="post_id" value="POST_202609_P04">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260908_174433">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1HwpyqU-7AaR8YRWfIeb2OvZ4cj0-Ehcn&sz=w1200" alt="POST_202609_P05" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-09-29</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P05</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Non, l'automatisation ne vient pas pour vos salariés</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      L'automatisation ne remplace pas vos salariés
+    </div>
+
+    <p class="caption">C'est une question qu'on entend rarement à voix haute, mais qui traverse l'esprit de beaucoup de dirigeants : est-ce que ça va remplacer mes équipes ? La réponse est non. L'automatisation ne vide pas les postes existants, elle absorbe les tâches répétitives que personne n'a vraiment envie de faire : relances, tri de mails, mise à jour de tableurs, réponses standards. Ce sont souvent ces tâches-là qui poussent à envisager un recrutement, alors qu'elles ne justifient pas un poste entier. En les déléguant à une automatisation sur-mesure, vos salariés gardent leur temps pour ce qui demande vraiment un jugement humain : la relation client, la vente, la gestion des cas particuliers. L'idée n'est pas de faire moins de monde, mais de mieux répartir le temps de chacun. Vous voulez identifier ce qui, dans vos équipes, pourrait être allégé ?</p>
+    <p class="hashtags">#Automatisation #TPE #PME #RelationClient #Digigo #OrganisationTravail</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="15kyYzpJizoE1Mq3stenhkMFRtZGiY3npPjndfIpAKGw">
+      <input type="hidden" name="post_id" value="POST_202609_P05">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260908_174433">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1GT7Nk5ZpHfPdwH7cdUCvQN2M8CUz6wcL&sz=w1200" alt="POST_202609_P06" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-01</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P06</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Agent IA ou automatisation, vous confondez sûrement les deux</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Agent IA ou automatisation ? La différence
+    </div>
+
+    <p class="caption">Ces deux termes reviennent souvent, mais ils ne désignent pas la même chose. Une automatisation exécute une tâche précise et répétée selon des règles fixes : par exemple, envoyer une facture dès qu'une commande est validée, ou classer des documents reçus par mail. Un agent IA, lui, agit de façon plus autonome sur une mission complète : il analyse une situation et adapte sa réponse. Notre agent Google, par exemple, lit un avis client et rédige une réponse personnalisée selon le ton et le contenu de cet avis, ce qu'une simple automatisation ne saurait pas faire seule. Comprendre cette différence aide à savoir ce dont votre entreprise a réellement besoin : parfois une automatisation simple suffit, parfois il faut un agent capable de gérer de la variabilité. Le pré-audit permet justement de clarifier ce point avant de se lancer. Curieux de savoir ce qui correspondrait à votre situation ?</p>
+    <p class="hashtags">#AgentIA #Automatisation #IntelligenceArtificielle #PédagogieDigitale #Digigo #TPEPME</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="15kyYzpJizoE1Mq3stenhkMFRtZGiY3npPjndfIpAKGw">
+      <input type="hidden" name="post_id" value="POST_202609_P06">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260908_174433">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=10jwOGxhHLqVQiPXF7baSj8Ko0LqDxDTn&sz=w1200" alt="POST_202609_P07" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-06</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P07</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Votre prospection s'est arrêtée sans que personne ne le décide</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Votre prospection s'est arretee sans decision
+    </div>
+
+    <p class="caption">Ça arrive souvent sans crier gare : la prospection ralentit, non pas parce qu'elle ne fonctionne plus, mais parce que personne dans l'équipe n'a le temps de la tenir en continu. Les relances de prospects tièdes passent à la trappe, les demandes entrantes attendent parfois plusieurs jours avant une réponse, et des opportunités s'éteignent doucement. Un agent IA peut prendre en charge une partie de ce travail : relancer les contacts identifiés, qualifier les demandes qui arrivent par formulaire ou message, et transmettre uniquement les échanges qui nécessitent vraiment un humain. L'idée n'est pas de remplacer votre approche commerciale, mais de garder la prospection active même quand personne n'a le temps de s'y consacrer à plein temps. C'est souvent ce type de situation, concrète et chiffrable, qui pousse un dirigeant à envisager une automatisation. Et vous, où en est votre prospection en ce moment ?</p>
+    <p class="hashtags">#Prospection #AgentIA #DéveloppementCommercial #TPE #PME #Digigo</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="15kyYzpJizoE1Mq3stenhkMFRtZGiY3npPjndfIpAKGw">
+      <input type="hidden" name="post_id" value="POST_202609_P07">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260908_174433">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1Dre3Gmg287T5ep7pLQbfouFfKCnAPLF-&sz=w1200" alt="POST_202609_P08" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-08</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P08</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Chez nous, vous n'êtes pas un numéro de dossier</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Vous n'êtes pas un numéro
+    </div>
+
+    <p class="caption">L'une des craintes qu'on nous partage le plus souvent, c'est celle d'être un petit client noyé parmi des dizaines d'autres dans une agence. On comprend cette réserve, surtout quand on a déjà vécu ce genre d'expérience. Notre façon de travailler repose sur un suivi personnalisé et une disponibilité réelle au quotidien : les questions trouvent une réponse rapidement, les ajustements se font sans lourdeur administrative, et chaque projet reste suivi par les mêmes interlocuteurs du début à la fin. Ce n'est pas un argument marketing, c'est simplement la manière dont on a choisi de structurer notre accompagnement, projet après projet. Un dirigeant de TPE ou PME n'a pas le temps de courir après son prestataire, alors on essaie de rendre ça inutile. Vous voulez échanger avec nous pour vous faire une idée par vous-même ?</p>
+    <p class="hashtags">#RelationClient #Confiance #AgenceDigitale #TPE #PME #Digigo #Réactivité</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="15kyYzpJizoE1Mq3stenhkMFRtZGiY3npPjndfIpAKGw">
+      <input type="hidden" name="post_id" value="POST_202609_P08">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260908_174433">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+
+    <p class="footer-note">
+      Une fois un post validé, il sera considéré comme prêt pour la programmation et la publication.
+    </p>
+  </div>
+
+  <iframe name="hidden_webhook_frame" style="display:none;"></iframe>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const forms = document.querySelectorAll(".validation-form");
+
+      function pluralizeRemaining(remaining) {
+        if (remaining > 1) {
+          return remaining + " modifications restantes";
+        }
+        if (remaining === 1) {
+          return "1 modification restante";
+        }
+        return "0 modification restante";
+      }
+
+      function applyModificationState(form) {
+        const version = parseInt(form.getAttribute("data-version") || "1", 10);
+        const remaining = Math.max(0, 2 - version);
+
+        const textarea = form.querySelector("textarea");
+        const remainingBadge = form.querySelector(".remaining-badge");
+        const modificationButtons = form.querySelectorAll(".modification-button");
+        const modificationNote = form.querySelector(".modification-note");
+
+        if (remainingBadge) {
+          remainingBadge.textContent = pluralizeRemaining(remaining);
+        }
+
+        modificationButtons.forEach(function (button) {
+          const baseLabel = button.getAttribute("data-base-label") || button.textContent.trim();
+          button.textContent = baseLabel + " (" + remaining + ")";
+
+          if (remaining === 0) {
+            button.disabled = true;
+            button.classList.add("button-disabled");
+          } else {
+            button.disabled = false;
+            button.classList.remove("button-disabled");
+          }
+        });
+
+        if (remaining === 0) {
+          if (textarea) {
+            textarea.disabled = true;
+            textarea.placeholder = "Aucune modification automatique restante pour ce post.";
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.add("visible");
+            modificationNote.innerHTML = "Ce post a déjà utilisé sa modification automatique. Vous pouvez encore le valider, mais les boutons de modification sont désormais désactivés.";
+          }
+        } else {
+          if (textarea) {
+            textarea.disabled = false;
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.remove("visible");
+          }
+        }
+
+        return remaining;
+      }
+
+      forms.forEach(function (form) {
+        let statusBox = form.querySelector(".form-status");
+
+        if (!statusBox) {
+          statusBox = document.createElement("div");
+          statusBox.className = "form-status";
+          form.appendChild(statusBox);
+        }
+
+        const actionInput = form.querySelector('input[name="action"]');
+        const actionButtons = form.querySelectorAll("button[data-action]");
+
+        applyModificationState(form);
+
+        actionButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            if (actionInput) {
+              actionInput.value = button.getAttribute("data-action");
+            }
+          });
+        });
+
+        form.addEventListener("submit", function (event) {
+          const action = actionInput ? actionInput.value : "";
+          const remaining = applyModificationState(form);
+
+          if (action !== "validate" && remaining === 0) {
+            event.preventDefault();
+            statusBox.innerHTML = "Aucune modification automatique restante pour ce post.";
+            statusBox.className = "form-status error";
+            return;
+          }
+
+          const textarea = form.querySelector("textarea");
+          const buttons = form.querySelector(".buttons");
+          const allButtons = form.querySelectorAll("button");
+          const statusBadge = form.closest(".post-card").querySelector(".badge.status");
+
+          statusBox.innerHTML = "Envoi en cours...";
+          statusBox.className = "form-status sending";
+
+          setTimeout(function () {
+            allButtons.forEach(function (button) {
+              button.disabled = true;
+              button.style.opacity = "0.6";
+              button.style.cursor = "not-allowed";
+            });
+          }, 50);
+
+          setTimeout(function () {
+            if (textarea) {
+              textarea.style.display = "none";
+            }
+
+            if (buttons) {
+              buttons.style.display = "none";
+            }
+
+            const modificationNote = form.querySelector(".modification-note");
+            if (modificationNote) {
+              modificationNote.style.display = "none";
+            }
+
+            if (action === "validate") {
+              statusBox.innerHTML = "Post validé ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Validé";
+              }
+            } else {
+              statusBox.innerHTML = "Demande envoyée ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Modification demandée";
+              }
+
+              const remainingBadge = form.querySelector(".remaining-badge");
+              if (remainingBadge) {
+                remainingBadge.textContent = "0 modification restante";
+              }
+            }
+
+            statusBox.className = "form-status success";
+          }, 900);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
