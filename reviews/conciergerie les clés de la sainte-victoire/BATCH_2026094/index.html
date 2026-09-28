@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts Instagram</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 42px 20px 60px;
+    }
+
+    .page-header {
+      margin-bottom: 34px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.15;
+      color: #111827;
+    }
+
+    .page-header p {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .post-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .post-preview {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #111827;
+      border: 1px solid #e5e7eb;
+    }
+
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-content {
+      padding: 4px 0;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .badge.date {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .badge.status {
+      background: #ecfdf5;
+      color: #166534;
+    }
+
+    .badge.remaining {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .post-content h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 1.25;
+      color: #111827;
+    }
+
+    .integrated-title {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .integrated-title strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+    }
+
+    .caption {
+      margin: 0 0 16px;
+      line-height: 1.6;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .hashtags {
+      margin: 0 0 20px;
+      color: #2563eb;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    form {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #111827;
+    }
+
+    textarea:disabled {
+      background: #f3f4f6;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 17px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      background: #111827;
+      color: white;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    button[data-action="validate"] {
+      background: #16a34a;
+    }
+
+    button[data-action="change_image"] {
+      background: #7c3aed;
+    }
+
+    button[data-action="change_text"] {
+      background: #2563eb;
+    }
+
+    button[data-action="change_text_image"] {
+      background: #dc2626;
+    }
+
+    .button-disabled,
+    button:disabled {
+      background: #d1d5db !important;
+      color: #6b7280 !important;
+      cursor: not-allowed !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .modification-note {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .modification-note.visible {
+      display: block;
+    }
+
+    .form-status {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .form-status.sending {
+      display: block;
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .form-status.success {
+      display: block;
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .form-status.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+
+      .post-preview {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        padding: 28px 14px 46px;
+      }
+
+      .post-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .post-content h2 {
+        font-size: 21px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Vos posts Instagram à valider</h1>
+      <p>
+        Voici les publications statiques générées pour le mois.
+        Chaque visuel est pensé comme une publication finale prête à être publiée.
+        Vous pouvez valider chaque post ou demander une modification.
+      </p>
+    </div>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=178LP9oky9t8IO41cGo6LaBu4-QPigNqv&sz=w1200" alt="POST_202609_P01" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-02</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P01</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Votre bien est-il fait pour la location courte durée ?</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Votre bien est-il fait pour la location ?
+    </div>
+
+    <p class="caption">Toutes les maisons ne se prêtent pas de la même façon à la location saisonnière, et c'est tout à fait normal. Quelques critères permettent d'y voir plus clair : la localisation et la facilité d'accès, le standing général du bien, sa capacité d'accueil, la présence d'extérieurs agréables comme une terrasse, un jardin ou une piscine. Aucun de ces éléments n'est éliminatoire à lui seul, mais leur combinaison donne une bonne indication du potentiel d'un logement. L'idée n'est pas de juger votre maison, mais de comprendre ce qui la rend attractive aux yeux des voyageurs et comment mieux la valoriser si besoin. Chaque bien a ses atouts, encore faut-il savoir les identifier. Vous vous demandez si votre maison correspond à ce marché ? N'hésitez pas à nous en parler.</p>
+    <p class="hashtags">#LocationSaisonnière #AixEnProvence #ConciergerieAix #SainteVictoire #ImmobilierAix #LocationCourteDurée</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1Y_yqYBBNmVIh6a8DplUR2sRdRbkHMo17szXBEtOIa-8">
+      <input type="hidden" name="post_id" value="POST_202609_P01">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260925_170926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1nWgj644bTw38_wap0CbTH6WcGi2JIpA1&sz=w1200" alt="POST_202609_P02" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-08</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P02</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Confier son bien ne veut pas dire perdre la main dessus</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Vous gardez la main sur votre bien
+    </div>
+
+    <p class="caption">C'est une question qui revient souvent, et elle est légitime : en confiant son logement, garde-t-on encore la main sur les décisions importantes ? La réponse est oui. Vous restez décisionnaire sur les dates de blocage pour vos propres séjours, sur la tarification appliquée et sur les critères d'acceptation des voyageurs. Ce que nous prenons en charge, c'est tout le quotidien opérationnel : les échanges avec les voyageurs, l'accueil, le ménage, le linge et le suivi du séjour du début à la fin. L'objectif est simple, vous libérer du temps et des contraintes tout en gardant une visibilité complète sur votre bien. Il ne s'agit pas de déléguer en aveugle, mais de collaborer avec quelqu'un qui connaît votre logement et vos attentes. Vous avez des questions sur ce fonctionnement ? On peut en discuter ensemble.</p>
+    <p class="hashtags">#ConciergerieAix #LocationSaisonnière #SainteVictoire #PropriétairesAix #ConfianceEtProximité #AixEnProvence</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1Y_yqYBBNmVIh6a8DplUR2sRdRbkHMo17szXBEtOIa-8">
+      <input type="hidden" name="post_id" value="POST_202609_P02">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260925_170926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1rwmU5-RCM2lcgiY8CU7TKdZQG9TZ8HKM&sz=w1200" alt="POST_202609_P03" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-13</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P03</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Une photo peut tout changer dans la perception d'un logement</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Une photo peut tout changer
+    </div>
+
+    <p class="caption">Avant même de visiter un logement, les voyageurs se font une première impression grâce aux photos de l'annonce. Une lumière bien exploitée, un rangement soigné, un cadrage qui met en valeur les volumes et les extérieurs, tout cela influence directement l'attractivité perçue d'un bien. Deux maisons similaires peuvent susciter un intérêt très différent selon la façon dont elles sont présentées. Ce n'est pas une question de tricher sur la réalité, mais de montrer un logement sous son meilleur jour, tel qu'il est réellement vécu au quotidien. C'est un travail de mise en valeur qui demande du temps et un vrai regard photographique, souvent négligé alors qu'il fait une vraie différence. Vous voulez en savoir plus sur la façon dont on met en valeur un bien avant sa mise en ligne ? On vous explique tout ça avec plaisir.</p>
+    <p class="hashtags">#ValorisationImmobilière #LocationSaisonnière #AixEnProvence #ConciergerieAix #PhotographieImmobilière #SainteVictoire</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1Y_yqYBBNmVIh6a8DplUR2sRdRbkHMo17szXBEtOIa-8">
+      <input type="hidden" name="post_id" value="POST_202609_P03">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260925_170926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=16oLOrs8fy2Ljho2IUoylZa8bN_Z7b_1I&sz=w1200" alt="POST_202609_P04" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-15</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P04</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Ces villages du Pays d'Aix que les voyageurs adorent découvrir</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Ces villages que les voyageurs adorent
+    </div>
+
+    <p class="caption">Le Pays d'Aix regorge de villages qui attirent les voyageurs en quête d'authenticité et de calme. Vauvenargues, au pied de la Sainte-Victoire, séduit par son cadre naturel et son ambiance paisible. Le Tholonet plaît pour sa proximité avec Aix tout en offrant une atmosphère provençale préservée. Saint-Antonin-sur-Bayon attire ceux qui cherchent la nature et les sentiers de randonnée juste à côté de la montagne. Et Puyloubier séduit par ses domaines viticoles et son cadre de vie authentique. Ces lieux font partie de ce qui rend un séjour dans la région si particulier, entre patrimoine, nature et douceur de vivre. Connaître ce territoire, c'est aussi savoir comment le mettre en avant dans une annonce. Vous voulez découvrir d'autres coins qui plaisent aux voyageurs ? Suivez-nous pour la suite.</p>
+    <p class="hashtags">#SainteVictoire #PaysDAix #AixEnProvence #Provence #TourismeProvence #VillagesDeProvence</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1Y_yqYBBNmVIh6a8DplUR2sRdRbkHMo17szXBEtOIa-8">
+      <input type="hidden" name="post_id" value="POST_202609_P04">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260925_170926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1t7ZqMEbCtTHsk8OyhR8A3NXUWgxonIFm&sz=w1200" alt="POST_202609_P05" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-20</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P05</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Le petit livret qui simplifie vraiment le séjour des voyageurs</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Le petit livret qui change tout
+    </div>
+
+    <p class="caption">Un livret d'accueil bien pensé peut sembler anecdotique, mais il change vraiment l'expérience d'un séjour. Il regroupe les informations pratiques utiles dès l'arrivée, le fonctionnement des équipements, les consignes importantes, mais aussi des recommandations locales, restaurants, marchés, balades ou activités autour de la Sainte-Victoire. Pour les voyageurs, c'est un vrai gain de sérénité, ils se sentent guidés sans être envahis de messages. Pour le propriétaire, c'est aussi une façon de valoriser son bien et de transmettre son propre regard sur la région. C'est un petit détail qui, mis bout à bout avec d'autres attentions, contribue à un séjour réussi et à des avis positifs. On aime particulièrement ce moment de création, car il reflète l'identité de chaque logement. Curieux de voir à quoi ressemble un livret d'accueil complet ? Dites-le-nous en commentaire.</p>
+    <p class="hashtags">#ExpérienceVoyageur #LocationSaisonnière #ConciergerieAix #AixEnProvence #SainteVictoire #AccueilVoyageurs</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1Y_yqYBBNmVIh6a8DplUR2sRdRbkHMo17szXBEtOIa-8">
+      <input type="hidden" name="post_id" value="POST_202609_P05">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260925_170926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1CuKXbQX-s-Uzp14ARhr5t7S2DE8GdtQz&sz=w1200" alt="POST_202609_P06" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-22</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P06</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Entre deux séjours, il se passe beaucoup plus qu'on ne l'imagine</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Entre deux séjours, tout se joue ici
+    </div>
+
+    <p class="caption">Entre le départ d'un voyageur et l'arrivée du suivant, plusieurs étapes s'enchaînent pour que tout soit parfaitement prêt. D'abord, un contrôle rapide du logement pour vérifier qu'aucun oubli ou incident n'est à signaler. Vient ensuite le ménage complet, réalisé avec attention aux détails, suivi du changement et du contrôle du linge. On vérifie aussi le bon fonctionnement des équipements et on remet en place chaque élément du logement pour retrouver une présentation soignée, identique à celle de l'annonce. Enfin, une dernière vérification permet de s'assurer que tout est prêt avant l'arrivée des nouveaux voyageurs. Ce sont des étapes discrètes, mais essentielles pour garantir une expérience fluide et un logement toujours impeccable. C'est ce travail de coulisses qui fait la différence sur la durée. Vous voulez en savoir plus sur notre façon de travailler au quotidien ?</p>
+    <p class="hashtags">#ConciergerieAix #CoulissesDuMétier #LocationSaisonnière #SainteVictoire #AixEnProvence #ServiceDeQualité</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1Y_yqYBBNmVIh6a8DplUR2sRdRbkHMo17szXBEtOIa-8">
+      <input type="hidden" name="post_id" value="POST_202609_P06">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260925_170926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1IOcJlhfV8hTgra9MCwPGewj3ewjk5Zxa&sz=w1200" alt="POST_202609_P07" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-27</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P07</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Pourquoi les prix bougent autant selon la période de l'année</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Pourquoi les prix varient selon les saisons
+    </div>
+
+    <p class="caption">Si vous avez déjà observé des annonces autour d'Aix-en-Provence, vous avez sans doute remarqué que les tarifs varient beaucoup selon les périodes. Plusieurs facteurs expliquent ces écarts, notamment la saison estivale, particulièrement recherchée dans notre région, mais aussi les événements locaux qui attirent davantage de visiteurs, ou encore les week-ends prolongés et les vacances scolaires qui font grimper la demande. Comprendre ces variations permet d'ajuster intelligemment la présentation et la disponibilité d'un bien, sans tomber dans une logique de prix figés toute l'année. Ce n'est pas une science exacte, mais une lecture fine du marché local qui s'affine avec l'expérience. C'est justement ce travail d'observation qui permet d'accompagner au mieux chaque propriétaire, sans jamais promettre de revenus garantis. Vous voulez comprendre comment ajuster votre stratégie selon les saisons ? On peut en parler ensemble.</p>
+    <p class="hashtags">#MarchéLocatif #AixEnProvence #LocationSaisonnière #SainteVictoire #ExpertiseLocale #ConciergerieAix</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1Y_yqYBBNmVIh6a8DplUR2sRdRbkHMo17szXBEtOIa-8">
+      <input type="hidden" name="post_id" value="POST_202609_P07">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260925_170926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=17Vu7CYA3b8b3FnFe-iZ2gtpQ3MNVMn4r&sz=w1200" alt="POST_202609_P08" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-29</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202609_P08</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Ce que les voyageurs retiennent vraiment d'un séjour en villa</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Ce que les voyageurs retiennent vraiment
+    </div>
+
+    <p class="caption">Lorsqu'on séjourne dans une villa de standing, certains détails comptent plus que d'autres pour vivre une expérience réussie. La réactivité en cas de question ou d'imprévu rassure immédiatement les voyageurs. Une propreté irréprochable dès l'arrivée reste un critère non négociable, tout comme un accueil personnalisé qui donne le ton du séjour. Les recommandations locales, bonnes adresses, activités ou balades autour de la Sainte-Victoire, sont aussi très appréciées, car elles enrichissent l'expérience au-delà du simple hébergement. Ces attentions, prises une par une, semblent simples, mais mises bout à bout, elles créent une expérience mémorable pour les voyageurs et une image soignée du bien pour le propriétaire. C'est cette attention aux détails qui fait souvent la différence dans les retours après séjour. Vous voulez savoir comment ces attentions se mettent en place concrètement ? On vous explique volontiers.</p>
+    <p class="hashtags">#ExpérienceVoyageur #VillaDeStanding #AixEnProvence #SainteVictoire #ConciergerieAix #LocationHautDeGamme</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1Y_yqYBBNmVIh6a8DplUR2sRdRbkHMo17szXBEtOIa-8">
+      <input type="hidden" name="post_id" value="POST_202609_P08">
+      <input type="hidden" name="batch_id" value="BATCH_202609">
+      <input type="hidden" name="token" value="20260925_170926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+
+    <p class="footer-note">
+      Une fois un post validé, il sera considéré comme prêt pour la programmation et la publication.
+    </p>
+  </div>
+
+  <iframe name="hidden_webhook_frame" style="display:none;"></iframe>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const forms = document.querySelectorAll(".validation-form");
+
+      function pluralizeRemaining(remaining) {
+        if (remaining > 1) {
+          return remaining + " modifications restantes";
+        }
+        if (remaining === 1) {
+          return "1 modification restante";
+        }
+        return "0 modification restante";
+      }
+
+      function applyModificationState(form) {
+        const version = parseInt(form.getAttribute("data-version") || "1", 10);
+        const remaining = Math.max(0, 2 - version);
+
+        const textarea = form.querySelector("textarea");
+        const remainingBadge = form.querySelector(".remaining-badge");
+        const modificationButtons = form.querySelectorAll(".modification-button");
+        const modificationNote = form.querySelector(".modification-note");
+
+        if (remainingBadge) {
+          remainingBadge.textContent = pluralizeRemaining(remaining);
+        }
+
+        modificationButtons.forEach(function (button) {
+          const baseLabel = button.getAttribute("data-base-label") || button.textContent.trim();
+          button.textContent = baseLabel + " (" + remaining + ")";
+
+          if (remaining === 0) {
+            button.disabled = true;
+            button.classList.add("button-disabled");
+          } else {
+            button.disabled = false;
+            button.classList.remove("button-disabled");
+          }
+        });
+
+        if (remaining === 0) {
+          if (textarea) {
+            textarea.disabled = true;
+            textarea.placeholder = "Aucune modification automatique restante pour ce post.";
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.add("visible");
+            modificationNote.innerHTML = "Ce post a déjà utilisé sa modification automatique. Vous pouvez encore le valider, mais les boutons de modification sont désormais désactivés.";
+          }
+        } else {
+          if (textarea) {
+            textarea.disabled = false;
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.remove("visible");
+          }
+        }
+
+        return remaining;
+      }
+
+      forms.forEach(function (form) {
+        let statusBox = form.querySelector(".form-status");
+
+        if (!statusBox) {
+          statusBox = document.createElement("div");
+          statusBox.className = "form-status";
+          form.appendChild(statusBox);
+        }
+
+        const actionInput = form.querySelector('input[name="action"]');
+        const actionButtons = form.querySelectorAll("button[data-action]");
+
+        applyModificationState(form);
+
+        actionButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            if (actionInput) {
+              actionInput.value = button.getAttribute("data-action");
+            }
+          });
+        });
+
+        form.addEventListener("submit", function (event) {
+          const action = actionInput ? actionInput.value : "";
+          const remaining = applyModificationState(form);
+
+          if (action !== "validate" && remaining === 0) {
+            event.preventDefault();
+            statusBox.innerHTML = "Aucune modification automatique restante pour ce post.";
+            statusBox.className = "form-status error";
+            return;
+          }
+
+          const textarea = form.querySelector("textarea");
+          const buttons = form.querySelector(".buttons");
+          const allButtons = form.querySelectorAll("button");
+          const statusBadge = form.closest(".post-card").querySelector(".badge.status");
+
+          statusBox.innerHTML = "Envoi en cours...";
+          statusBox.className = "form-status sending";
+
+          setTimeout(function () {
+            allButtons.forEach(function (button) {
+              button.disabled = true;
+              button.style.opacity = "0.6";
+              button.style.cursor = "not-allowed";
+            });
+          }, 50);
+
+          setTimeout(function () {
+            if (textarea) {
+              textarea.style.display = "none";
+            }
+
+            if (buttons) {
+              buttons.style.display = "none";
+            }
+
+            const modificationNote = form.querySelector(".modification-note");
+            if (modificationNote) {
+              modificationNote.style.display = "none";
+            }
+
+            if (action === "validate") {
+              statusBox.innerHTML = "Post validé ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Validé";
+              }
+            } else {
+              statusBox.innerHTML = "Demande envoyée ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Modification demandée";
+              }
+
+              const remainingBadge = form.querySelector(".remaining-badge");
+              if (remainingBadge) {
+                remainingBadge.textContent = "0 modification restante";
+              }
+            }
+
+            statusBox.className = "form-status success";
+          }, 900);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
