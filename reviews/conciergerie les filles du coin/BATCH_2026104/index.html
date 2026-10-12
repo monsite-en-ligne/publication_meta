@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts Instagram</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 42px 20px 60px;
+    }
+
+    .page-header {
+      margin-bottom: 34px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.15;
+      color: #111827;
+    }
+
+    .page-header p {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .post-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .post-preview {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #111827;
+      border: 1px solid #e5e7eb;
+    }
+
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-content {
+      padding: 4px 0;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .badge.date {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .badge.status {
+      background: #ecfdf5;
+      color: #166534;
+    }
+
+    .badge.remaining {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .post-content h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 1.25;
+      color: #111827;
+    }
+
+    .integrated-title {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .integrated-title strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+    }
+
+    .caption {
+      margin: 0 0 16px;
+      line-height: 1.6;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .hashtags {
+      margin: 0 0 20px;
+      color: #2563eb;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    form {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #111827;
+    }
+
+    textarea:disabled {
+      background: #f3f4f6;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 17px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      background: #111827;
+      color: white;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    button[data-action="validate"] {
+      background: #16a34a;
+    }
+
+    button[data-action="change_image"] {
+      background: #7c3aed;
+    }
+
+    button[data-action="change_text"] {
+      background: #2563eb;
+    }
+
+    button[data-action="change_text_image"] {
+      background: #dc2626;
+    }
+
+    .button-disabled,
+    button:disabled {
+      background: #d1d5db !important;
+      color: #6b7280 !important;
+      cursor: not-allowed !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .modification-note {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .modification-note.visible {
+      display: block;
+    }
+
+    .form-status {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .form-status.sending {
+      display: block;
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .form-status.success {
+      display: block;
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .form-status.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+
+      .post-preview {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        padding: 28px 14px 46px;
+      }
+
+      .post-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .post-content h2 {
+        font-size: 21px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Vos posts Instagram à valider</h1>
+      <p>
+        Voici les publications statiques générées pour le mois.
+        Chaque visuel est pensé comme une publication finale prête à être publiée.
+        Vous pouvez valider chaque post ou demander une modification.
+      </p>
+    </div>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1mA4Kfb7oOtOUQHnbKsSQft8vDKBYfHKY&sz=w1200" alt="POST_202610_P01" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-15</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202610_P01</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Avant chaque arrivée, rien n'est laissé au hasard</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Rien n'est laissé au hasard
+    </div>
+
+    <p class="caption">Avant que chaque voyageur ne franchisse la porte, un passage complet du logement est réalisé. On vérifie le linge, les équipements, la propreté, le bon fonctionnement de chaque détail, même ceux qu'on ne remarque pas au premier regard. C'est ce travail invisible qui fait la différence entre un séjour correct et un séjour réussi. Pour les propriétaires, cela veut dire un logement toujours prêt à accueillir dans les meilleures conditions, sans avoir à s'en soucier. C'est cette rigueur du quotidien qui construit la confiance sur la durée. Vous vous demandez comment se passe le suivi de votre bien au quotidien ? N'hésitez pas à nous écrire pour en discuter.</p>
+    <p class="hashtags">#ConciergerieNice #CoteDAzur #LocationNice #SoinDuDetail #AccueilVoyageurs #NiceImmobilier #ConfianceEtQualite</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1f1udREykkydjHvCNpZZwasjyGNnjOBINpP8iTlulgAU">
+      <input type="hidden" name="post_id" value="POST_202610_P01">
+      <input type="hidden" name="batch_id" value="BATCH_202610">
+      <input type="hidden" name="token" value="20261007_162415">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1RWKCv6u7zv455veJVTTDzzYTtRXzLQKi&sz=w1200" alt="POST_202610_P02" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-17</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202610_P02</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Nice ne se résume pas à un seul visage, et c'est tant mieux</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Nice a mille visages, nous les connaissons
+    </div>
+
+    <p class="caption">Le Vieux Nice, Cimiez, le Port, la Promenade des Anglais... chaque quartier a son identité, ses habitués et son profil de voyageurs. Un appartement près du port n'attire pas le même public qu'une villa sur les hauteurs de Cimiez. Connaître ces nuances permet d'adapter le suivi de chaque logement à la réalité du terrain, et pas seulement sur le papier. C'est cette connaissance fine de la ville, acquise au fil du temps et du travail de terrain, qui permet d'anticiper les besoins spécifiques de chaque bien et de ses voyageurs. Un ancrage local qui fait toute la différence dans la qualité du suivi proposé. Vous avez un bien dans un quartier particulier de Nice ? Parlons-en ensemble.</p>
+    <p class="hashtags">#Nice #CoteDAzur #VieuxNice #Cimiez #AncrageLocal #ConciergerieNice #ImmobilierNice</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1f1udREykkydjHvCNpZZwasjyGNnjOBINpP8iTlulgAU">
+      <input type="hidden" name="post_id" value="POST_202610_P02">
+      <input type="hidden" name="batch_id" value="BATCH_202610">
+      <input type="hidden" name="token" value="20261007_162415">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1E4_r8qGVCG0x7LQ51lzTABn-5u7HJq-Y&sz=w1200" alt="POST_202610_P03" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-22</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202610_P03</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Que comprend vraiment une prise en charge complète du logement ?</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Ce que comprend vraiment notre prise en charge
+    </div>
+
+    <p class="caption">C'est une question qu'on entend souvent, et elle est légitime. Au quotidien, cela veut dire s'occuper de l'accueil des voyageurs, du suivi du logement pendant le séjour, de la coordination avec les prestataires d'entretien, et de la remise en état entre deux passages. Chaque action est pensée pour que le propriétaire n'ait rien à gérer lui-même, tout en gardant une visibilité claire sur ce qui se passe dans son bien. Pas de zones floues, pas de surprises : chaque étape est suivie avec la même rigueur, du premier au dernier jour de la collaboration. C'est cette transparence qui permet de construire une relation de confiance sur le long terme. Vous avez des questions sur ce qui est inclus pour votre logement ? Contactez-nous, on en parle volontiers.</p>
+    <p class="hashtags">#ConciergerieNice #CoteDAzur #PriseEnChargeComplete #ConfianceClient #TransparenceService #NiceImmobilier</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1f1udREykkydjHvCNpZZwasjyGNnjOBINpP8iTlulgAU">
+      <input type="hidden" name="post_id" value="POST_202610_P03">
+      <input type="hidden" name="batch_id" value="BATCH_202610">
+      <input type="hidden" name="token" value="20261007_162415">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1Id5VOhkVn8idF17sMBZOXkvJp00lxkGR&sz=w1200" alt="POST_202610_P04" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-24</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202610_P04</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un petit mot qui change tout dès l'arrivée</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Un mot d'accueil qui change tout
+    </div>
+
+    <p class="caption">Dès leur arrivée, chaque voyageur découvre un message d'accueil pensé pour lui, avec quelques conseils adaptés à son séjour et à la saison. Une petite attention qui ne coûte rien, mais qui fait souvent toute la différence dans la première impression. C'est ce genre de détail, simple mais réfléchi, qui donne le ton d'un séjour réussi dès les premières minutes. Pour les propriétaires, c'est aussi la garantie que leurs voyageurs se sentent bien accueillis, même en leur absence. Ce sont ces petites attentions répétées qui construisent une expérience voyageur de qualité, séjour après séjour. Et vous, quelle attention aimeriez-vous retrouver en arrivant dans un logement ? Dites-le nous en commentaire.</p>
+    <p class="hashtags">#ExperienceVoyageur #AccueilPersonnalise #Nice #CoteDAzur #ConciergerieNice #SejourReussi</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1f1udREykkydjHvCNpZZwasjyGNnjOBINpP8iTlulgAU">
+      <input type="hidden" name="post_id" value="POST_202610_P04">
+      <input type="hidden" name="batch_id" value="BATCH_202610">
+      <input type="hidden" name="token" value="20261007_162415">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1YPJLXv1ads9320QeD8MaIiLjgFHJXJ_u&sz=w1200" alt="POST_202610_P05" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-29</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202610_P05</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Du premier message au dernier au revoir, voici comment ça se passe</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Le déroulé d'un suivi, étape par étape
+    </div>
+
+    <p class="caption">Tout commence avant même l'arrivée du voyageur, avec la préparation et le contrôle du logement. Puis vient l'accueil, suivi d'une disponibilité tout au long du séjour pour répondre aux questions ou gérer un imprévu. À la fin du séjour, le départ est organisé et le logement est remis en état pour la prochaine arrivée. Entre ces grandes étapes, une communication régulière avec les voyageurs permet d'anticiper leurs besoins et d'assurer un séjour fluide. Cette méthode, appliquée avec la même rigueur à chaque fois, permet au propriétaire de garder l'esprit tranquille, sans avoir à intervenir à chaque étape. Vous souhaitez en savoir plus sur notre façon de travailler au quotidien ? Écrivez-nous, on vous explique tout.</p>
+    <p class="hashtags">#MethodeDeTravail #ConciergerieNice #SuiviDeSejour #CoteDAzur #SavoirFaire #NiceImmobilier</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1f1udREykkydjHvCNpZZwasjyGNnjOBINpP8iTlulgAU">
+      <input type="hidden" name="post_id" value="POST_202610_P05">
+      <input type="hidden" name="batch_id" value="BATCH_202610">
+      <input type="hidden" name="token" value="20261007_162415">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1OcHMIvBA1o-3nzMPVTDGuXZbAINPQaen&sz=w1200" alt="POST_202610_P06" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-10-31</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202610_P06</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Confier ses clés, ce n'est jamais un détail</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Confier ses clés, jamais un détail
+    </div>
+
+    <p class="caption">On comprend que laisser l'accès de son logement à quelqu'un d'extérieur puisse poser question. C'est pour cela que chaque accès est traité avec la même discrétion et la même rigueur, que ce soit pour une villa ou un appartement. Les clés sont suivies avec attention, et chaque passage dans le logement se fait dans le respect du bien et de son propriétaire. Cette rigueur n'est pas un supplément, c'est la base de notre façon de travailler au quotidien. La confiance se construit justement sur ces habitudes simples, répétées avec sérieux à chaque séjour. C'est ce qui permet aux propriétaires de nous confier leur bien l'esprit tranquille, sans avoir à se poser de questions. Vous avez des inquiétudes sur ce sujet ? N'hésitez pas à nous en parler directement.</p>
+    <p class="hashtags">#ConfianceEtDiscretion #ConciergerieNice #CoteDAzur #SecuriteDuLogement #SerenitePropriétaire #NiceImmobilier</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1f1udREykkydjHvCNpZZwasjyGNnjOBINpP8iTlulgAU">
+      <input type="hidden" name="post_id" value="POST_202610_P06">
+      <input type="hidden" name="batch_id" value="BATCH_202610">
+      <input type="hidden" name="token" value="20261007_162415">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=119ek-rdxb-5M3my9RJDzQverx80wSVBI&sz=w1200" alt="POST_202610_P07" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-05</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202610_P07</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Déléguer entièrement ou tout faire soi-même : il existe une vraie différence</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Tout gérer seul ou déléguer sereinement
+    </div>
+
+    <p class="caption">Beaucoup de propriétaires hésitent entre s'occuper eux-mêmes du suivi de leur logement et déléguer entièrement cette responsabilité. Une prise en charge complète signifie que chaque aspect du suivi, de l'accueil des voyageurs à l'entretien du bien, est assuré sans que le propriétaire ait à intervenir. Cela ne veut pas dire perdre le contrôle, mais plutôt gagner en sérénité tout en gardant un œil sur ce qui se passe grâce à un suivi régulier. L'objectif est simple : que le logement soit toujours bien tenu et que les voyageurs vivent une bonne expérience, sans que cela demande du temps ou de l'énergie au propriétaire. C'est cette tranquillité d'esprit que beaucoup recherchent, surtout quand leur emploi du temps ne leur permet pas de s'en occuper eux-mêmes. Vous hésitez encore sur la formule la plus adaptée à votre situation ? Parlons-en ensemble.</p>
+    <p class="hashtags">#PriseEnChargeComplete #ConciergerieNice #CoteDAzur #DeleguerSereinement #ImmobilierNice #ConfianceClient</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1f1udREykkydjHvCNpZZwasjyGNnjOBINpP8iTlulgAU">
+      <input type="hidden" name="post_id" value="POST_202610_P07">
+      <input type="hidden" name="batch_id" value="BATCH_202610">
+      <input type="hidden" name="token" value="20261007_162415">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1RdGtArOP-ltTaJxMkJliVJD-j2XjSXXC&sz=w1200" alt="POST_202610_P08" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-07</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">POST_202610_P08</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Entre deux séjours, chaque détail compte</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Entre deux séjours, chaque détail compte
+    </div>
+
+    <p class="caption">Dès le départ d'un voyageur, le processus de remise en état commence. Nettoyage approfondi, vérification du linge, contrôle des équipements, rangement : rien n'est laissé de côté avant l'arrivée suivante. Ce travail minutieux, souvent invisible pour le propriétaire, est pourtant essentiel pour maintenir la qualité du logement séjour après séjour. C'est cette rigueur appliquée systématiquement qui permet de préserver l'état du bien sur la durée, tout en garantissant une bonne expérience aux prochains voyageurs. Un logement bien entretenu, c'est aussi un logement qui inspire confiance dès les premières minutes du séjour. Vous voulez savoir comment se déroule ce processus pour votre logement ? Contactez-nous pour en discuter.</p>
+    <p class="hashtags">#RemiseEnEtat #ConciergerieNice #CoteDAzur #RigueurEtQualite #EntretienLogement #NiceImmobilier</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1f1udREykkydjHvCNpZZwasjyGNnjOBINpP8iTlulgAU">
+      <input type="hidden" name="post_id" value="POST_202610_P08">
+      <input type="hidden" name="batch_id" value="BATCH_202610">
+      <input type="hidden" name="token" value="20261007_162415">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+
+    <p class="footer-note">
+      Une fois un post validé, il sera considéré comme prêt pour la programmation et la publication.
+    </p>
+  </div>
+
+  <iframe name="hidden_webhook_frame" style="display:none;"></iframe>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const forms = document.querySelectorAll(".validation-form");
+
+      function pluralizeRemaining(remaining) {
+        if (remaining > 1) {
+          return remaining + " modifications restantes";
+        }
+        if (remaining === 1) {
+          return "1 modification restante";
+        }
+        return "0 modification restante";
+      }
+
+      function applyModificationState(form) {
+        const version = parseInt(form.getAttribute("data-version") || "1", 10);
+        const remaining = Math.max(0, 2 - version);
+
+        const textarea = form.querySelector("textarea");
+        const remainingBadge = form.querySelector(".remaining-badge");
+        const modificationButtons = form.querySelectorAll(".modification-button");
+        const modificationNote = form.querySelector(".modification-note");
+
+        if (remainingBadge) {
+          remainingBadge.textContent = pluralizeRemaining(remaining);
+        }
+
+        modificationButtons.forEach(function (button) {
+          const baseLabel = button.getAttribute("data-base-label") || button.textContent.trim();
+          button.textContent = baseLabel + " (" + remaining + ")";
+
+          if (remaining === 0) {
+            button.disabled = true;
+            button.classList.add("button-disabled");
+          } else {
+            button.disabled = false;
+            button.classList.remove("button-disabled");
+          }
+        });
+
+        if (remaining === 0) {
+          if (textarea) {
+            textarea.disabled = true;
+            textarea.placeholder = "Aucune modification automatique restante pour ce post.";
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.add("visible");
+            modificationNote.innerHTML = "Ce post a déjà utilisé sa modification automatique. Vous pouvez encore le valider, mais les boutons de modification sont désormais désactivés.";
+          }
+        } else {
+          if (textarea) {
+            textarea.disabled = false;
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.remove("visible");
+          }
+        }
+
+        return remaining;
+      }
+
+      forms.forEach(function (form) {
+        let statusBox = form.querySelector(".form-status");
+
+        if (!statusBox) {
+          statusBox = document.createElement("div");
+          statusBox.className = "form-status";
+          form.appendChild(statusBox);
+        }
+
+        const actionInput = form.querySelector('input[name="action"]');
+        const actionButtons = form.querySelectorAll("button[data-action]");
+
+        applyModificationState(form);
+
+        actionButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            if (actionInput) {
+              actionInput.value = button.getAttribute("data-action");
+            }
+          });
+        });
+
+        form.addEventListener("submit", function (event) {
+          const action = actionInput ? actionInput.value : "";
+          const remaining = applyModificationState(form);
+
+          if (action !== "validate" && remaining === 0) {
+            event.preventDefault();
+            statusBox.innerHTML = "Aucune modification automatique restante pour ce post.";
+            statusBox.className = "form-status error";
+            return;
+          }
+
+          const textarea = form.querySelector("textarea");
+          const buttons = form.querySelector(".buttons");
+          const allButtons = form.querySelectorAll("button");
+          const statusBadge = form.closest(".post-card").querySelector(".badge.status");
+
+          statusBox.innerHTML = "Envoi en cours...";
+          statusBox.className = "form-status sending";
+
+          setTimeout(function () {
+            allButtons.forEach(function (button) {
+              button.disabled = true;
+              button.style.opacity = "0.6";
+              button.style.cursor = "not-allowed";
+            });
+          }, 50);
+
+          setTimeout(function () {
+            if (textarea) {
+              textarea.style.display = "none";
+            }
+
+            if (buttons) {
+              buttons.style.display = "none";
+            }
+
+            const modificationNote = form.querySelector(".modification-note");
+            if (modificationNote) {
+              modificationNote.style.display = "none";
+            }
+
+            if (action === "validate") {
+              statusBox.innerHTML = "Post validé ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Validé";
+              }
+            } else {
+              statusBox.innerHTML = "Demande envoyée ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Modification demandée";
+              }
+
+              const remainingBadge = form.querySelector(".remaining-badge");
+              if (remainingBadge) {
+                remainingBadge.textContent = "0 modification restante";
+              }
+            }
+
+            statusBox.className = "form-status success";
+          }, 900);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
