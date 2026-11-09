@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts Instagram</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 42px 20px 60px;
+    }
+
+    .page-header {
+      margin-bottom: 34px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.15;
+      color: #111827;
+    }
+
+    .page-header p {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .post-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .post-preview {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #111827;
+      border: 1px solid #e5e7eb;
+    }
+
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .post-content {
+      padding: 4px 0;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .badge.date {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .badge.status {
+      background: #ecfdf5;
+      color: #166534;
+    }
+
+    .badge.remaining {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .post-content h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 1.25;
+      color: #111827;
+    }
+
+    .integrated-title {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .integrated-title strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+    }
+
+    .caption {
+      margin: 0 0 16px;
+      line-height: 1.6;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .hashtags {
+      margin: 0 0 20px;
+      color: #2563eb;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    form {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #111827;
+    }
+
+    textarea:disabled {
+      background: #f3f4f6;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 17px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      background: #111827;
+      color: white;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    button[data-action="validate"] {
+      background: #16a34a;
+    }
+
+    button[data-action="change_image"] {
+      background: #7c3aed;
+    }
+
+    button[data-action="change_text"] {
+      background: #2563eb;
+    }
+
+    button[data-action="change_text_image"] {
+      background: #dc2626;
+    }
+
+    .button-disabled,
+    button:disabled {
+      background: #d1d5db !important;
+      color: #6b7280 !important;
+      cursor: not-allowed !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .modification-note {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .modification-note.visible {
+      display: block;
+    }
+
+    .form-status {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .form-status.sending {
+      display: block;
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .form-status.success {
+      display: block;
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .form-status.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+
+      .post-preview {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        padding: 28px 14px 46px;
+      }
+
+      .post-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .post-content h2 {
+        font-size: 21px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Vos posts Instagram à valider</h1>
+      <p>
+        Voici les publications statiques générées pour le mois.
+        Chaque visuel est pensé comme une publication finale prête à être publiée.
+        Vous pouvez valider chaque post ou demander une modification.
+      </p>
+    </div>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1WEAfZ2g7avJ-ejkKBQK3qjRIBkMhncTD&sz=w1200" alt="BATCH_20261105_0013_P01" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-10</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0013_P01</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Le prix de la conciergerie, ça couvre quoi exactement ?</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Le prix, ça couvre quoi exactement ?
+    </div>
+
+    <p class="caption">C'est une question légitime, et on comprend qu'elle revienne souvent. Le tarif de nos prestations reflète une réalité simple : chaque mission mobilise du temps, de l'organisation et un suivi régulier, bien au-delà de la simple remise des clés. Entre la coordination des artisans, la gestion du linge, l'accueil des voyageurs et le suivi après chaque séjour, le travail est continu, même s'il reste discret pour le propriétaire. Notre objectif est que chaque prestation proposée soit claire et compréhensible, sans surprise ni ligne floue. On préfère prendre le temps d'expliquer ce qui est inclus plutôt que de laisser planer le doute. Si vous vous posez des questions sur notre fonctionnement ou sur ce qui est concrètement pris en charge, n'hésitez pas à nous écrire, on prend toujours le temps de répondre.</p>
+    <p class="hashtags">#conciergerie #locationcourtedurée #estparisien #gestionlocative #propriétaire #transparence #valdemarne</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1JWr_YEXnXJ5Rx-gORipIE_QL195G3BZp81RiPOIH-f8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0013_P01">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0013">
+      <input type="hidden" name="token" value="20261006_151808">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1DAseW4QasDEsWtZUoUN10D9u1LkTWsPK&sz=w1200" alt="BATCH_20261105_0013_P02" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-12</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0013_P02</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un bon conseil resto peut changer tout un séjour</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Une bonne table, un séjour réussi
+    </div>
+
+    <p class="caption">Au-delà de la remise des clés, ce sont souvent les petites attentions qui marquent les voyageurs. La réservation de restaurant fait partie de ces services simples mais appréciés : une table réservée dans une adresse de confiance, sans que le propriétaire ait à s'en occuper. Pour les voyageurs, c'est l'assurance d'un bon moment sans recherche fastidieuse. Pour vous, c'est une façon supplémentaire de valoriser votre logement et l'expérience qu'il propose, sans effort de votre part. Ce type de détail contribue à une impression générale positive du séjour, et donc de votre bien. On s'occupe de ces petites attentions pour que votre logement reste associé à une expérience soignée. Envie d'en savoir plus sur nos services complémentaires ? N'hésitez pas à nous contacter.</p>
+    <p class="hashtags">#conciergerie #expériencevoyageur #lepeerreuxsurmarne #locationcourtedurée #serviceclient #estparisien</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1JWr_YEXnXJ5Rx-gORipIE_QL195G3BZp81RiPOIH-f8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0013_P02">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0013">
+      <input type="hidden" name="token" value="20261006_151808">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1HXKKtbl_yUOyRpfWduG70PV06StKcYzE&sz=w1200" alt="BATCH_20261105_0013_P03" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-17</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0013_P03</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Ce qui se passe après chaque séjour, concrètement</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Après chaque séjour, le contrôle commence
+    </div>
+
+    <p class="caption">La confiance se construit sur des habitudes concrètes, pas sur des promesses. Après chaque séjour, un contrôle du logement est effectué pour vérifier son état général, signaler toute anomalie et s'assurer que tout est prêt pour l'arrivée suivante. Ce suivi régulier permet d'anticiper les besoins d'entretien, de coordonner rapidement un artisan si nécessaire, et de garder une vision claire de l'état du bien dans la durée. Ce n'est pas une vérification ponctuelle, mais une routine pensée pour que rien ne soit laissé au hasard. C'est cette rigueur, appliquée séjour après séjour, qui permet aux propriétaires de garder l'esprit tranquille, même à distance. On ne promet pas l'impossible, on applique une méthode sérieuse et constante. Si vous souhaitez comprendre comment cela fonctionne pour votre logement, parlons-en ensemble.</p>
+    <p class="hashtags">#conciergerie #suivilogement #confiance #locationcourtedurée #nogentsurmarne #gestionlocative</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1JWr_YEXnXJ5Rx-gORipIE_QL195G3BZp81RiPOIH-f8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0013_P03">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0013">
+      <input type="hidden" name="token" value="20261006_151808">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1o4PHQmYLC-JOjXh7BjMBF7XZtU_n8j4B&sz=w1200" alt="BATCH_20261105_0013_P04" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-19</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0013_P04</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Bry-sur-Marne et Villiers-sur-Marne n'ont pas les mêmes profils de voyageurs</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Deux villes, deux marchés locatifs différents
+    </div>
+
+    <p class="caption">Chaque secteur a ses particularités, et c'est souvent ce qui fait la différence dans la gestion d'un logement en courte durée. À Bry-sur-Marne comme à Villiers-sur-Marne, les profils de voyageurs, les durées de séjour et les attentes ne sont pas identiques à ce que l'on observe ailleurs dans l'Est parisien. Connaître ces nuances, c'est pouvoir mieux préparer un logement, anticiper certaines demandes et adapter les services proposés en conséquence. Cette connaissance du terrain ne s'improvise pas, elle se construit avec le temps et la présence régulière sur place. C'est cette proximité avec le secteur qui permet d'apporter un accompagnement vraiment adapté à chaque propriétaire, plutôt qu'une approche standardisée. Vous êtes propriétaire dans ce secteur et vous avez des questions sur votre marché local ? Discutons-en.</p>
+    <p class="hashtags">#brysurmarne #villierssurmarne #estparisien #marchélocatif #conciergerie #locationcourtedurée</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1JWr_YEXnXJ5Rx-gORipIE_QL195G3BZp81RiPOIH-f8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0013_P04">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0013">
+      <input type="hidden" name="token" value="20261006_151808">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1dxdoBNfAdxkQK2fRoqVM77SaNyymRil7&sz=w1200" alt="BATCH_20261105_0013_P05" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-24</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0013_P05</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Les démarches administratives ne doivent pas vous freiner</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Les formalités légales, on vous accompagne
+    </div>
+
+    <p class="caption">Se lancer en location courte durée implique certaines formalités légales, et c'est souvent ce qui freine ou retarde les propriétaires qui souhaitent démarrer. Déclaration en mairie, numéro d'enregistrement, respect de certaines règles locales : ces étapes peuvent sembler complexes quand on les découvre seul. Notre rôle est d'accompagner les propriétaires dans ces démarches pour qu'ils comprennent ce qui est nécessaire et dans quel ordre procéder, sans avoir à tout gérer dans leur coin. On ne remplace pas les démarches administratives, mais on aide à y voir clair et à avancer sereinement, étape par étape. L'idée est simple : que ce passage obligé ne devienne pas un obstacle au projet. Vous envisagez de vous lancer et ces formalités vous semblent floues ? Parlons-en ensemble pour clarifier les choses.</p>
+    <p class="hashtags">#locationcourtedurée #formalitéslégales #nouveauxpropriétaires #estparisien #accompagnement #conciergerie</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1JWr_YEXnXJ5Rx-gORipIE_QL195G3BZp81RiPOIH-f8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0013_P05">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0013">
+      <input type="hidden" name="token" value="20261006_151808">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1rn6uaLut0uJ8mG1JmDIcdZSgliylWhYg&sz=w1200" alt="BATCH_20261105_0013_P06" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-26</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0013_P06</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Déléguer, ça veut dire quoi concrètement au quotidien ?</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Déléguer, c'est reprendre du temps pour vous
+    </div>
+
+    <p class="caption">Le mot délégation est souvent utilisé, mais concrètement, qu'est-ce que cela change pour un propriétaire ? Cela signifie ne plus avoir à répondre aux messages des voyageurs à toute heure, ne plus coordonner soi-même le ménage ou le linge entre deux séjours, ne plus se déplacer pour accueillir ou gérer un imprévu technique. Chaque étape, de l'accueil à la remise des clés en passant par le suivi des prestations des artisans, est prise en charge selon une organisation précise. Le propriétaire reste informé, mais n'a plus à gérer les détails du quotidien. C'est cette prise en charge complète qui permet de retrouver du temps pour soi, sans pour autant perdre le contrôle sur son bien. Vous souhaitez savoir à quoi ressemblerait cette délégation pour votre logement ? Contactez-nous pour en discuter.</p>
+    <p class="hashtags">#conciergerie #gaindetemps #locationcourtedurée #estparisien #propriétaire #sérénité</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1JWr_YEXnXJ5Rx-gORipIE_QL195G3BZp81RiPOIH-f8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0013_P06">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0013">
+      <input type="hidden" name="token" value="20261006_151808">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1Qb6yaIZriW_wxWCwqRyLb8s2vbWlTmdo&sz=w1200" alt="BATCH_20261105_0013_P07" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-01</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0013_P07</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Les premières minutes d'un séjour comptent beaucoup</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Les premières minutes font toute la différence
+    </div>
+
+    <p class="caption">L'arrivée d'un voyageur donne souvent le ton de tout le séjour. Avant même son arrivée, le logement est vérifié, préparé et prêt à accueillir dans de bonnes conditions. Sur place, l'accueil se fait avec attention : présentation du logement, informations pratiques sur le quartier, réponses aux questions du voyageur. Ce moment, qui peut sembler anodin, est en réalité l'occasion de rassurer et de bien démarrer le séjour, tout en représentant le logement et son propriétaire avec sérieux. C'est aussi un moment d'observation discret, qui permet de repérer si quelque chose doit être signalé ou ajusté. Ces attentions simples, répétées à chaque arrivée, contribuent à une expérience cohérente pour les voyageurs, et à la tranquillité d'esprit du propriétaire. On aime partager ces moments du quotidien, ils reflètent bien notre façon de travailler.</p>
+    <p class="hashtags">#conciergerie #accueilvoyageurs #coulisses #locationcourtedurée #estparisien #quotidien</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1JWr_YEXnXJ5Rx-gORipIE_QL195G3BZp81RiPOIH-f8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0013_P07">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0013">
+      <input type="hidden" name="token" value="20261006_151808">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1LDhFgd5D_GkXWUg7JAXRIB9s6FiVQHwp&sz=w1200" alt="BATCH_20261105_0013_P08" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-03</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0013_P08</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un lit bébé, un vélo, un équipement en plus : simple à organiser</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Le petit plus qui change tout
+    </div>
+
+    <p class="caption">Certains voyageurs ont des besoins spécifiques pendant leur séjour : un lit bébé, du matériel de sport, un équipement particulier pour leur confort. Plutôt que de laisser cette demande sans réponse, nous proposons un service de location de matériel adapté, organisé directement avec des prestataires de confiance. Pour le voyageur, c'est une solution pratique qui améliore son expérience sur place. Pour le propriétaire, c'est un service de plus qui valorise le logement, sans aucune organisation supplémentaire à gérer. Ce type de détail, souvent discret, participe à la qualité générale du séjour perçue par les voyageurs. C'est aussi ce genre d'attention qui différencie un logement bien accompagné d'un logement livré à lui-même. Vous souhaitez savoir comment ce service pourrait s'intégrer à votre logement ? N'hésitez pas à nous en parler.</p>
+    <p class="hashtags">#conciergerie #locationmatériel #confortvoyageurs #locationcourtedurée #estparisien #services</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1JWr_YEXnXJ5Rx-gORipIE_QL195G3BZp81RiPOIH-f8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0013_P08">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0013">
+      <input type="hidden" name="token" value="20261006_151808">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+
+    <p class="footer-note">
+      Une fois un post validé, il sera considéré comme prêt pour la programmation et la publication.
+    </p>
+  </div>
+
+  <iframe name="hidden_webhook_frame" style="display:none;"></iframe>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const forms = document.querySelectorAll(".validation-form");
+
+      function pluralizeRemaining(remaining) {
+        if (remaining > 1) {
+          return remaining + " modifications restantes";
+        }
+        if (remaining === 1) {
+          return "1 modification restante";
+        }
+        return "0 modification restante";
+      }
+
+      function applyModificationState(form) {
+        const version = parseInt(form.getAttribute("data-version") || "1", 10);
+        const remaining = Math.max(0, 2 - version);
+
+        const textarea = form.querySelector("textarea");
+        const remainingBadge = form.querySelector(".remaining-badge");
+        const modificationButtons = form.querySelectorAll(".modification-button");
+        const modificationNote = form.querySelector(".modification-note");
+
+        if (remainingBadge) {
+          remainingBadge.textContent = pluralizeRemaining(remaining);
+        }
+
+        modificationButtons.forEach(function (button) {
+          const baseLabel = button.getAttribute("data-base-label") || button.textContent.trim();
+          button.textContent = baseLabel + " (" + remaining + ")";
+
+          if (remaining === 0) {
+            button.disabled = true;
+            button.classList.add("button-disabled");
+          } else {
+            button.disabled = false;
+            button.classList.remove("button-disabled");
+          }
+        });
+
+        if (remaining === 0) {
+          if (textarea) {
+            textarea.disabled = true;
+            textarea.placeholder = "Aucune modification automatique restante pour ce post.";
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.add("visible");
+            modificationNote.innerHTML = "Ce post a déjà utilisé sa modification automatique. Vous pouvez encore le valider, mais les boutons de modification sont désormais désactivés.";
+          }
+        } else {
+          if (textarea) {
+            textarea.disabled = false;
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.remove("visible");
+          }
+        }
+
+        return remaining;
+      }
+
+      forms.forEach(function (form) {
+        let statusBox = form.querySelector(".form-status");
+
+        if (!statusBox) {
+          statusBox = document.createElement("div");
+          statusBox.className = "form-status";
+          form.appendChild(statusBox);
+        }
+
+        const actionInput = form.querySelector('input[name="action"]');
+        const actionButtons = form.querySelectorAll("button[data-action]");
+
+        applyModificationState(form);
+
+        actionButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            if (actionInput) {
+              actionInput.value = button.getAttribute("data-action");
+            }
+          });
+        });
+
+        form.addEventListener("submit", function (event) {
+          const action = actionInput ? actionInput.value : "";
+          const remaining = applyModificationState(form);
+
+          if (action !== "validate" && remaining === 0) {
+            event.preventDefault();
+            statusBox.innerHTML = "Aucune modification automatique restante pour ce post.";
+            statusBox.className = "form-status error";
+            return;
+          }
+
+          const textarea = form.querySelector("textarea");
+          const buttons = form.querySelector(".buttons");
+          const allButtons = form.querySelectorAll("button");
+          const statusBadge = form.closest(".post-card").querySelector(".badge.status");
+
+          statusBox.innerHTML = "Envoi en cours...";
+          statusBox.className = "form-status sending";
+
+          setTimeout(function () {
+            allButtons.forEach(function (button) {
+              button.disabled = true;
+              button.style.opacity = "0.6";
+              button.style.cursor = "not-allowed";
+            });
+          }, 50);
+
+          setTimeout(function () {
+            if (textarea) {
+              textarea.style.display = "none";
+            }
+
+            if (buttons) {
+              buttons.style.display = "none";
+            }
+
+            const modificationNote = form.querySelector(".modification-note");
+            if (modificationNote) {
+              modificationNote.style.display = "none";
+            }
+
+            if (action === "validate") {
+              statusBox.innerHTML = "Post validé ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Validé";
+              }
+            } else {
+              statusBox.innerHTML = "Demande envoyée ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Modification demandée";
+              }
+
+              const remainingBadge = form.querySelector(".remaining-badge");
+              if (remainingBadge) {
+                remainingBadge.textContent = "0 modification restante";
+              }
+            }
+
+            statusBox.className = "form-status success";
+          }, 900);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
