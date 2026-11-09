@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts Instagram</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 42px 20px 60px;
+    }
+
+    .page-header {
+      margin-bottom: 34px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.15;
+      color: #111827;
+    }
+
+    .page-header p {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .post-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .post-preview {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #111827;
+      border: 1px solid #e5e7eb;
+    }
+
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .post-content {
+      padding: 4px 0;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .badge.date {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .badge.status {
+      background: #ecfdf5;
+      color: #166534;
+    }
+
+    .badge.remaining {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .post-content h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 1.25;
+      color: #111827;
+    }
+
+    .integrated-title {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .integrated-title strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+    }
+
+    .caption {
+      margin: 0 0 16px;
+      line-height: 1.6;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .hashtags {
+      margin: 0 0 20px;
+      color: #2563eb;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    form {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #111827;
+    }
+
+    textarea:disabled {
+      background: #f3f4f6;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 17px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      background: #111827;
+      color: white;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    button[data-action="validate"] {
+      background: #16a34a;
+    }
+
+    button[data-action="change_image"] {
+      background: #7c3aed;
+    }
+
+    button[data-action="change_text"] {
+      background: #2563eb;
+    }
+
+    button[data-action="change_text_image"] {
+      background: #dc2626;
+    }
+
+    .button-disabled,
+    button:disabled {
+      background: #d1d5db !important;
+      color: #6b7280 !important;
+      cursor: not-allowed !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .modification-note {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .modification-note.visible {
+      display: block;
+    }
+
+    .form-status {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .form-status.sending {
+      display: block;
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .form-status.success {
+      display: block;
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .form-status.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+
+      .post-preview {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        padding: 28px 14px 46px;
+      }
+
+      .post-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .post-content h2 {
+        font-size: 21px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Vos posts Instagram à valider</h1>
+      <p>
+        Voici les publications statiques générées pour le mois.
+        Chaque visuel est pensé comme une publication finale prête à être publiée.
+        Vous pouvez valider chaque post ou demander une modification.
+      </p>
+    </div>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1_o9TNNlA85egxjiW9kELHEaovFLxOJLK&sz=w1200" alt="BATCH_20261105_0010_P01" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-10</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0010_P01</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un train tôt le matin ne devrait jamais gâcher un séjour</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Votre timing, notre priorité absolue
+    </div>
+
+    <p class="caption">Il y a quelques semaines, un couple m'a contactée un peu stressé : leur train partait tard le soir, mais le départ du logement était prévu en milieu d'après-midi. Plutôt que de les laisser traîner leurs valises en ville pendant des heures, on a trouvé une solution simple ensemble. Résultat, ils ont pu profiter du logement jusqu'au bout, se poser, se doucher tranquillement avant de partir sereins. C'est exactement ce genre de détail qui change une fin de séjour stressante en moment agréable. Ce n'est pas toujours possible selon les réservations, mais quand ça l'est, j'essaie toujours de m'adapter aux contraintes réelles des voyageurs. Vous avez déjà vécu ce genre de galère de timing en voyage ? Racontez-moi en commentaire.</p>
+    <p class="hashtags">#conciergerie #locationcourtedurée #voyageensemble #expériencevoyageur #sejourreussi #hébergementpremium #surmesure</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1S8cdlhWFQfMEVB7pg9j378Jc7UMIu5zOV50iM91zNP8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0010_P01">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0010">
+      <input type="hidden" name="token" value="20260929_094814">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1W50xl8ZDDsSWHDmCztR3-QmyR3N7Of1r&sz=w1200" alt="BATCH_20261105_0010_P02" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-12</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0010_P02</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Novembre, la saison que les voyageurs pressés oublient trop souvent</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Novembre, la saison oubliée des voyageurs
+    </div>
+
+    <p class="caption">Beaucoup pensent qu'il faut attendre l'été pour découvrir la région, mais j'ai un petit faible pour cette période de l'année. Les rues sont plus calmes, les lumières sont douces, et on prend le temps de vraiment profiter des lieux sans la foule des vacances. C'est aussi une saison où les terrasses sont plus accessibles et où chaque petite adresse locale se savoure différemment. Les couples qui viennent en escapade à cette période me disent souvent qu'ils ont apprécié cette ambiance plus intime. Et pour les familles, c'est l'occasion de découvrir la région autrement, à un rythme plus tranquille. Si vous aviez un week-end à vous offrir d'ici la fin de l'année, ce serait pour visiter quoi dans le coin ? Dites-moi tout en commentaire.</p>
+    <p class="hashtags">#automne #escapade #régiondécouverte #weekendencouple #tourismelocal #sejourautomne #conciergerie</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1S8cdlhWFQfMEVB7pg9j378Jc7UMIu5zOV50iM91zNP8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0010_P02">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0010">
+      <input type="hidden" name="token" value="20260929_094814">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1RoiokTX7HDWhMBYrPjIhD1mWcJBE5864&sz=w1200" alt="BATCH_20261105_0010_P03" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-17</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0010_P03</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un petit mot d'accueil peut changer toute la perception d'un séjour</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Le petit mot qui change tout
+    </div>
+
+    <p class="caption">On sous-estime souvent l'impact des petits détails sur l'expérience globale d'un voyageur. Un message de bienvenue personnalisé, une information claire sur le quartier, une attention qui montre qu'on a pensé à lui avant même son arrivée, tout cela joue énormément sur la satisfaction finale. Les voyageurs qui se sentent accueillis avec soin repartent avec un souvenir différent, et cela se ressent naturellement dans leurs retours. Ce n'est pas une question de budget ou de promesse de résultat, c'est une question d'attention réelle portée à chaque étape du séjour. C'est exactement ce que j'essaie d'apporter à chaque logement que j'accompagne, en restant disponible et à l'écoute des besoins réels des voyageurs comme des propriétaires. Et vous, qu'est-ce qui marque le plus votre expérience en tant que voyageur ? Partagez votre avis en commentaire.</p>
+    <p class="hashtags">#expérienceclient #accueilpersonnalisé #satisfactionvoyageur #conciergerie #hébergementdequalité #confiance</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1S8cdlhWFQfMEVB7pg9j378Jc7UMIu5zOV50iM91zNP8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0010_P03">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0010">
+      <input type="hidden" name="token" value="20260929_094814">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1szSSRDzFiUn2NTEbeoKL-PIEe1vhA7N2&sz=w1200" alt="BATCH_20261105_0010_P04" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-19</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0010_P04</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Ce soir, je prépare une petite surprise pour un prochain séjour</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Ce soir, je prépare une surprise
+    </div>
+
+    <p class="caption">Il y a des moments où je prends vraiment plaisir à préparer une attention particulière pour un voyageur. Récemment, j'ai passé un peu de temps à réfléchir à une petite surprise pour un séjour un peu spécial, en choisissant chaque élément avec soin. Ce n'est pas une tâche obligatoire, c'est plutôt un plaisir personnel, une façon de mettre un peu de moi dans chaque séjour que j'accompagne. Ces instants-là, souvent invisibles pour les propriétaires, font pourtant toute la différence dans le ressenti des voyageurs à leur arrivée. C'est aussi ça, mon métier : prendre le temps de personnaliser chaque étape, sans jamais le faire à la va-vite. Ce genre de préparation, je pourrais en parler pendant des heures. Et vous, quelle attention vous ferait vraiment plaisir en arrivant dans un logement ? Dites-le-moi en commentaire.</p>
+    <p class="hashtags">#coulisses #conciergerie #attentionpersonnalisée #humain #sensduservice #surprisevoyageur</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1S8cdlhWFQfMEVB7pg9j378Jc7UMIu5zOV50iM91zNP8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0010_P04">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0010">
+      <input type="hidden" name="token" value="20260929_094814">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1ESxh8nkoE_GyTTIMn2xDlVgsZYnyJbXJ&sz=w1200" alt="BATCH_20261105_0010_P05" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-24</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0010_P05</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un accueil pour un couple ne ressemble jamais à celui d'une famille</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Un accueil pensé pour chaque voyageur
+    </div>
+
+    <p class="caption">Quand je prépare l'arrivée d'un voyageur, je ne fais jamais la même chose deux fois. Pour un couple en escapade romantique, je vais privilégier une ambiance douce et quelques attentions intimistes. Pour une famille, je pense plutôt à des informations pratiques utiles avec les enfants, et parfois une petite attention qui leur est dédiée. Pour un voyageur en déplacement professionnel, l'essentiel sera la simplicité et l'efficacité de l'accueil. C'est cette capacité à s'adapter qui fait, je crois, toute la différence dans l'expérience vécue. Le sur mesure, ce n'est pas un argument marketing pour moi, c'est une façon concrète de penser chaque séjour en fonction de la personne qui va le vivre. Et vous, si vous deviez réserver un séjour demain, vous seriez plutôt couple, famille ou pro ? Dites-le-moi en commentaire.</p>
+    <p class="hashtags">#surmesure #conciergerie #accueilpersonnalisé #expériencevoyageur #hébergementpremium #détailquicompte</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1S8cdlhWFQfMEVB7pg9j378Jc7UMIu5zOV50iM91zNP8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0010_P05">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0010">
+      <input type="hidden" name="token" value="20260929_094814">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1rnJ6TbicYGu6j_uRFZ4UK6hRqeKOZk6i&sz=w1200" alt="BATCH_20261105_0010_P06" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-26</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0010_P06</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Les enfants ont couru vers le petit sac posé sur la table</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      L'attention qui change tout un sejour
+    </div>
+
+    <p class="caption">Imaginez une famille qui arrive après plusieurs heures de route, fatiguée mais impatiente de profiter de son séjour. En poussant la porte, les enfants découvrent un petit sac avec quelques surprises pensées pour eux, pendant que les parents remarquent les informations utiles laissées sur la table pour s'organiser facilement avec les plus jeunes. Ce genre de scène, je l'imagine à chaque fois que je prépare l'arrivée d'une famille, parce que je sais à quel point un accueil pensé pour tous les âges peut transformer le début d'un séjour. Ce ne sont pas de grands gestes, juste des attentions simples qui montrent qu'on a pensé à chacun. Ces petits moments-là, ce sont souvent eux qui restent gravés dans les souvenirs de vacances. Et vous, quel souvenir d'arrivée en famille vous a le plus marqué ? Partagez-le en commentaire.</p>
+    <p class="hashtags">#famille #vacancesenfamille #sejourfamille #expériencevoyageur #conciergerie #attentionpersonnalisée</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1S8cdlhWFQfMEVB7pg9j378Jc7UMIu5zOV50iM91zNP8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0010_P06">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0010">
+      <input type="hidden" name="token" value="20260929_094814">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1VLqGTJJ5xgGjQ3wU1tv2I30x7ZJi1UeV&sz=w1200" alt="BATCH_20261105_0010_P07" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-01</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0010_P07</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Les trois questions que les propriétaires me posent presque toujours</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Les 3 questions qu'on me pose toujours
+    </div>
+
+    <p class="caption">Avant de se lancer, les propriétaires ont souvent les mêmes interrogations, et c'est bien normal. La première concerne le fonctionnement au quotidien : comment je m'organise avec eux, et comment je reste joignable en cas de besoin. La deuxième porte sur l'engagement demandé, car beaucoup craignent de s'enfermer dans quelque chose de rigide ou de compliqué à ajuster. La troisième touche au suivi personnalisé, c'est-à-dire la façon dont j'adapte mon accompagnement selon chaque logement et chaque propriétaire. Je prends toujours le temps de répondre honnêtement à ces questions, car la confiance se construit avec de la transparence, pas avec des promesses toutes faites. Chaque situation est différente, et c'est justement pour ça que j'aime prendre le temps d'échanger avant toute décision. Vous avez une question sur le fonctionnement que vous n'osez pas poser ? C'est le moment de me la poser en commentaire.</p>
+    <p class="hashtags">#conciergerie #questionsfréquentes #propriétaire #transparence #accompagnementpersonnalisé #confiance</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1S8cdlhWFQfMEVB7pg9j378Jc7UMIu5zOV50iM91zNP8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0010_P07">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0010">
+      <input type="hidden" name="token" value="20260929_094814">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1K8wB8nsouo0EvXnfoKACPw5xCYI1aPno&sz=w1200" alt="BATCH_20261105_0010_P08" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-03</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0010_P08</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un séjour romantique réussi tient souvent à trois petits gestes</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Trois petits gestes, un grand moment
+    </div>
+
+    <p class="caption">On imagine parfois qu'un séjour romantique demande de grands moyens, alors qu'en réalité, ce sont souvent les petites attentions qui font toute la différence. Une ambiance soignée à l'arrivée, quelques bougies disposées avec goût, une petite touche sucrée ou un message personnalisé peuvent suffire à créer un vrai moment à deux. L'option romantique que je propose s'appuie justement sur ces détails simples mais pensés avec soin, pour transformer un week-end ordinaire en parenthèse mémorable. Ce n'est pas une question de budget, mais d'intention et d'attention portée au couple qui séjourne. J'aime beaucoup préparer ce type d'accueil, car on sent vraiment la différence dans les retours des voyageurs. Si vous deviez organiser un séjour romantique parfait, quelle serait votre attention incontournable ? Dites-le-moi en commentaire, et pourquoi pas pour votre prochaine escapade.</p>
+    <p class="hashtags">#séjourromantique #couple #weekendamoureux #conciergerie #attentionpersonnalisée #escapaderomantique #momentàdeux</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1S8cdlhWFQfMEVB7pg9j378Jc7UMIu5zOV50iM91zNP8">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0010_P08">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0010">
+      <input type="hidden" name="token" value="20260929_094814">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+
+    <p class="footer-note">
+      Une fois un post validé, il sera considéré comme prêt pour la programmation et la publication.
+    </p>
+  </div>
+
+  <iframe name="hidden_webhook_frame" style="display:none;"></iframe>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const forms = document.querySelectorAll(".validation-form");
+
+      function pluralizeRemaining(remaining) {
+        if (remaining > 1) {
+          return remaining + " modifications restantes";
+        }
+        if (remaining === 1) {
+          return "1 modification restante";
+        }
+        return "0 modification restante";
+      }
+
+      function applyModificationState(form) {
+        const version = parseInt(form.getAttribute("data-version") || "1", 10);
+        const remaining = Math.max(0, 2 - version);
+
+        const textarea = form.querySelector("textarea");
+        const remainingBadge = form.querySelector(".remaining-badge");
+        const modificationButtons = form.querySelectorAll(".modification-button");
+        const modificationNote = form.querySelector(".modification-note");
+
+        if (remainingBadge) {
+          remainingBadge.textContent = pluralizeRemaining(remaining);
+        }
+
+        modificationButtons.forEach(function (button) {
+          const baseLabel = button.getAttribute("data-base-label") || button.textContent.trim();
+          button.textContent = baseLabel + " (" + remaining + ")";
+
+          if (remaining === 0) {
+            button.disabled = true;
+            button.classList.add("button-disabled");
+          } else {
+            button.disabled = false;
+            button.classList.remove("button-disabled");
+          }
+        });
+
+        if (remaining === 0) {
+          if (textarea) {
+            textarea.disabled = true;
+            textarea.placeholder = "Aucune modification automatique restante pour ce post.";
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.add("visible");
+            modificationNote.innerHTML = "Ce post a déjà utilisé sa modification automatique. Vous pouvez encore le valider, mais les boutons de modification sont désormais désactivés.";
+          }
+        } else {
+          if (textarea) {
+            textarea.disabled = false;
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.remove("visible");
+          }
+        }
+
+        return remaining;
+      }
+
+      forms.forEach(function (form) {
+        let statusBox = form.querySelector(".form-status");
+
+        if (!statusBox) {
+          statusBox = document.createElement("div");
+          statusBox.className = "form-status";
+          form.appendChild(statusBox);
+        }
+
+        const actionInput = form.querySelector('input[name="action"]');
+        const actionButtons = form.querySelectorAll("button[data-action]");
+
+        applyModificationState(form);
+
+        actionButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            if (actionInput) {
+              actionInput.value = button.getAttribute("data-action");
+            }
+          });
+        });
+
+        form.addEventListener("submit", function (event) {
+          const action = actionInput ? actionInput.value : "";
+          const remaining = applyModificationState(form);
+
+          if (action !== "validate" && remaining === 0) {
+            event.preventDefault();
+            statusBox.innerHTML = "Aucune modification automatique restante pour ce post.";
+            statusBox.className = "form-status error";
+            return;
+          }
+
+          const textarea = form.querySelector("textarea");
+          const buttons = form.querySelector(".buttons");
+          const allButtons = form.querySelectorAll("button");
+          const statusBadge = form.closest(".post-card").querySelector(".badge.status");
+
+          statusBox.innerHTML = "Envoi en cours...";
+          statusBox.className = "form-status sending";
+
+          setTimeout(function () {
+            allButtons.forEach(function (button) {
+              button.disabled = true;
+              button.style.opacity = "0.6";
+              button.style.cursor = "not-allowed";
+            });
+          }, 50);
+
+          setTimeout(function () {
+            if (textarea) {
+              textarea.style.display = "none";
+            }
+
+            if (buttons) {
+              buttons.style.display = "none";
+            }
+
+            const modificationNote = form.querySelector(".modification-note");
+            if (modificationNote) {
+              modificationNote.style.display = "none";
+            }
+
+            if (action === "validate") {
+              statusBox.innerHTML = "Post validé ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Validé";
+              }
+            } else {
+              statusBox.innerHTML = "Demande envoyée ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Modification demandée";
+              }
+
+              const remainingBadge = form.querySelector(".remaining-badge");
+              if (remainingBadge) {
+                remainingBadge.textContent = "0 modification restante";
+              }
+            }
+
+            statusBox.className = "form-status success";
+          }, 900);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
