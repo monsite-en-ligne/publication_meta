@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts Instagram</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 42px 20px 60px;
+    }
+
+    .page-header {
+      margin-bottom: 34px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.15;
+      color: #111827;
+    }
+
+    .page-header p {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .post-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .post-preview {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #111827;
+      border: 1px solid #e5e7eb;
+    }
+
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .post-content {
+      padding: 4px 0;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .badge.date {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .badge.status {
+      background: #ecfdf5;
+      color: #166534;
+    }
+
+    .badge.remaining {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .post-content h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 1.25;
+      color: #111827;
+    }
+
+    .integrated-title {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .integrated-title strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+    }
+
+    .caption {
+      margin: 0 0 16px;
+      line-height: 1.6;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .hashtags {
+      margin: 0 0 20px;
+      color: #2563eb;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    form {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #111827;
+    }
+
+    textarea:disabled {
+      background: #f3f4f6;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 17px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      background: #111827;
+      color: white;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    button[data-action="validate"] {
+      background: #16a34a;
+    }
+
+    button[data-action="change_image"] {
+      background: #7c3aed;
+    }
+
+    button[data-action="change_text"] {
+      background: #2563eb;
+    }
+
+    button[data-action="change_text_image"] {
+      background: #dc2626;
+    }
+
+    .button-disabled,
+    button:disabled {
+      background: #d1d5db !important;
+      color: #6b7280 !important;
+      cursor: not-allowed !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .modification-note {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .modification-note.visible {
+      display: block;
+    }
+
+    .form-status {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .form-status.sending {
+      display: block;
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .form-status.success {
+      display: block;
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .form-status.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+
+      .post-preview {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        padding: 28px 14px 46px;
+      }
+
+      .post-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .post-content h2 {
+        font-size: 21px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Vos posts Instagram à valider</h1>
+      <p>
+        Voici les publications statiques générées pour le mois.
+        Chaque visuel est pensé comme une publication finale prête à être publiée.
+        Vous pouvez valider chaque post ou demander une modification.
+      </p>
+    </div>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1DTreJGwyFwUqlyNdPONaWHKtzmWUvKWA&sz=w1200" alt="BATCH_20261105_2134_P01" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-17</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_2134_P01</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>L'automne révèle un autre visage du Pic Saint-Loup</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      L'automne révèle un autre visage
+    </div>
+
+    <p class="caption">Il y a des saisons qui transforment un paysage et rappellent pourquoi on aime autant ce territoire. En ce moment, le Pic Saint-Loup se pare de couleurs chaudes, et chaque virage de la route offre un nouveau point de vue sur la garrigue et les vignes environnantes. Connaître ce territoire dans le détail, ce n'est pas juste une question de géographie, c'est comprendre ce qui fait la valeur et le charme d'un bien selon sa situation, son orientation, son environnement proche. C'est cette connaissance fine du terrain qui permet d'accompagner chaque propriétaire avec justesse, que ce soit pour conseiller sur l'entretien d'un bien ou anticiper les besoins liés à la saison. La région a beaucoup à offrir, et c'est un plaisir de la parcourir au quotidien pour le compte des propriétaires qui nous font confiance. Et vous, quel coin de la Vallée de l'Hérault préférez-vous en automne ? Dites-le nous en commentaire.</p>
+    <p class="hashtags">#PicSaintLoup #ValleeDeLHerault #Occitanie #Automne #ConciergerieImmobiliere #Montpellier #TerritoireLocal</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YIapGEtsznpb9OvdAC39wgaioGYRStMhGSZzA6OrSlU">
+      <input type="hidden" name="post_id" value="BATCH_20261105_2134_P01">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_2134">
+      <input type="hidden" name="token" value="20261105_212055">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1tgYy1ayEFOzbQXP2z2x-HdIDmV5TqSC-&sz=w1200" alt="BATCH_20261105_2134_P02" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-19</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_2134_P02</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Chaque artisan qui intervient chez vous est choisi, pas improvisé</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Chaque artisan est choisi, pas improvisé
+    </div>
+
+    <p class="caption">Confier son bien, c'est aussi confier les clés à des personnes qui vont y intervenir. C'est pourquoi le choix des prestataires et artisans partenaires ne se fait jamais au hasard. Avant toute collaboration, chaque professionnel est rencontré, ses références sont vérifiées, et son sérieux est évalué sur la durée. L'objectif est simple : s'assurer que chaque intervention, qu'il s'agisse d'un petit entretien ou d'une réparation plus importante, soit réalisée dans les règles de l'art et avec le même respect du bien que s'il s'agissait du nôtre. Cette rigueur dans la sélection fait partie intégrante de la méthode de travail, parce qu'un propriétaire serein est un propriétaire qui sait que les bonnes personnes s'occupent de son patrimoine. C'est un travail de fond, discret mais essentiel, qui construit la confiance sur la durée. Vous avez des questions sur notre réseau de prestataires ? N'hésitez pas à nous écrire.</p>
+    <p class="hashtags">#ConciergerieImmobiliere #Confiance #Herault #GestionLocative #ProprietairesSereins #Occitanie #Fiabilite</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YIapGEtsznpb9OvdAC39wgaioGYRStMhGSZzA6OrSlU">
+      <input type="hidden" name="post_id" value="BATCH_20261105_2134_P02">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_2134">
+      <input type="hidden" name="token" value="20261105_212055">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1sknuLrpLLstylyPuEjRdSs1CypYhBo-o&sz=w1200" alt="BATCH_20261105_2134_P03" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-24</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_2134_P03</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un reporting clair, chaque mois, sans avoir à le demander</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Votre reporting mensuel, clair et sans surprise
+    </div>
+
+    <p class="caption">L'une des questions qui revient le plus souvent chez les propriétaires, c'est de savoir ce qui se passe réellement avec leur bien au quotidien. C'est une interrogation légitime, et c'est pour y répondre que chaque propriétaire accompagné reçoit un suivi chiffré régulier, mois après mois. Ce reporting reprend les éléments essentiels de façon simple et lisible, sans jargon inutile, pour que chacun puisse suivre la situation de son bien en toute transparence. Ce n'est pas un document administratif de plus, c'est un véritable outil de dialogue qui permet d'anticiper, d'ajuster et de garder un lien constant même à distance. La transparence n'est pas un argument marketing ici, c'est une habitude de travail qui s'inscrit dans la durée. Vous vous demandez à quoi ressemble concrètement ce suivi ? Contactez-nous, on vous explique tout simplement.</p>
+    <p class="hashtags">#Transparence #GestionLocative #ConciergerieImmobiliere #Herault #ProprietairesSereins #Reporting #Confiance</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YIapGEtsznpb9OvdAC39wgaioGYRStMhGSZzA6OrSlU">
+      <input type="hidden" name="post_id" value="BATCH_20261105_2134_P03">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_2134">
+      <input type="hidden" name="token" value="20261105_212055">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1HRkAjGk-BAf4WDL_bW16D4y8TpIqOWu2&sz=w1200" alt="BATCH_20261105_2134_P04" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-26</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_2134_P04</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Derrière chaque bien bien géré, il y a une journée bien remplie</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Une journée bien remplie, un bien bien géré
+    </div>
+
+    <p class="caption">On imagine parfois qu'une conciergerie se résume à quelques visites de courtoisie, alors que la réalité est bien plus concrète. Une journée type peut commencer par une vérification du bien après le départ d'un locataire, se poursuivre par la coordination avec un artisan pour une petite réparation, et se terminer par un appel à un propriétaire pour faire un point sur la situation. Entre les deux, il faut aussi gérer les imprévus, anticiper les besoins saisonniers, et veiller à ce que tout reste en ordre, même quand personne n'est sur place. C'est un métier de détails et de réactivité, qui demande autant d'organisation que de sens du contact humain. Montrer ces coulisses, c'est aussi une façon d'expliquer pourquoi un accompagnement sérieux prend du temps et de l'attention. Vous voulez en savoir plus sur notre quotidien ? Suivez-nous, on vous montre les coulisses.</p>
+    <p class="hashtags">#CoulissesDuMetier #ConciergerieImmobiliere #GestionDeBien #Herault #Quotidien #Occitanie #ProprietairesSereins</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YIapGEtsznpb9OvdAC39wgaioGYRStMhGSZzA6OrSlU">
+      <input type="hidden" name="post_id" value="BATCH_20261105_2134_P04">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_2134">
+      <input type="hidden" name="token" value="20261105_212055">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=10JNBDbONfErpX2gKAG5XnPbGFUISfzqg&sz=w1200" alt="BATCH_20261105_2134_P05" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-01</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_2134_P05</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un interlocuteur local, ça change tout quand un imprévu arrive</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Un interlocuteur local change tout
+    </div>
+
+    <p class="caption">Avoir quelqu'un qui connaît physiquement votre bien, qui peut s'y rendre en quelques minutes et qui comprend les spécificités de votre secteur, c'est une différence qui se ressent surtout dans les moments où tout ne se passe pas comme prévu. Une plateforme ou un interlocuteur distant peut traiter une demande, mais il ne pourra jamais remplacer une présence réelle sur le terrain, capable de se déplacer, d'évaluer une situation sur place et d'agir rapidement en conséquence. Cette proximité permet aussi une relation plus humaine, où les échanges se font naturellement, sans avoir l'impression de parler à un simple numéro de dossier. C'est cette disponibilité concrète qui rassure les propriétaires exigeants, ceux qui veulent savoir qu'une personne de confiance veille sur leur bien, pas un algorithme. La proximité n'est pas un détail, c'est souvent ce qui fait toute la différence. Envie d'échanger sur votre situation ? On est disponibles pour en discuter.</p>
+    <p class="hashtags">#ProximiteHumaine #ConciergerieImmobiliere #GestionLocative #Herault #Montpellier #ProprietairesSereins #Occitanie</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YIapGEtsznpb9OvdAC39wgaioGYRStMhGSZzA6OrSlU">
+      <input type="hidden" name="post_id" value="BATCH_20261105_2134_P05">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_2134">
+      <input type="hidden" name="token" value="20261105_212055">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1PT5-NtMk23gy4jvYNaiGGQhlla9Up0sd&sz=w1200" alt="BATCH_20261105_2134_P06" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-03</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_2134_P06</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Le marché de Saint-Mathieu-de-Tréviers prend des airs de fêtes</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Le marché de Saint-Mathieu en fête
+    </div>
+
+    <p class="caption">À l'approche des fêtes, le marché de Saint-Mathieu-de-Tréviers retrouve cette atmosphère chaleureuse si particulière, entre producteurs locaux, décorations de saison et habitants qui prennent le temps de s'arrêter pour discuter. C'est ce genre de moments qui rappelle à quel point ce territoire a une identité forte, faite de petits gestes et de vie de village qui perdure malgré le temps qui passe. S'impliquer dans la vie locale, c'est aussi ça, aller à la rencontre des habitants, soutenir les initiatives du coin et rester connecté à ce qui fait le quotidien de la région. Ce sont ces attachements simples qui nourrissent une relation sincère avec le territoire, bien au-delà des biens immobiliers que l'on accompagne. Si vous passez par le marché cette semaine, on vous souhaite une belle balade pleine de bonnes odeurs et de belles rencontres. Vous y serez aussi ?</p>
+    <p class="hashtags">#SaintMathieuDeTreviers #ViePratique #ValleeDeLHerault #MarcheDeNoel #Occitanie #VieLocale #Herault</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YIapGEtsznpb9OvdAC39wgaioGYRStMhGSZzA6OrSlU">
+      <input type="hidden" name="post_id" value="BATCH_20261105_2134_P06">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_2134">
+      <input type="hidden" name="token" value="20261105_212055">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1iDWe0YU0v5sJdbRSAJZR6-eltaSPgDpM&sz=w1200" alt="BATCH_20261105_2134_P07" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-08</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_2134_P07</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Tout commence par une conversation, pas par un contrat</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Tout commence par une conversation
+    </div>
+
+    <p class="caption">Le premier échange avec un propriétaire ne ressemble jamais à un simple rendez-vous commercial. Il s'agit avant tout d'écouter, de comprendre les attentes, les contraintes et parfois les inquiétudes liées à la gestion d'un bien. Cette prise de contact se poursuit naturellement par une visite sur place, l'occasion d'observer les spécificités du bien, son environnement et ses éventuels besoins spécifiques. C'est à partir de cette écoute attentive que se construit un accompagnement réellement sur-mesure, loin des solutions standardisées qui ne tiennent pas compte des particularités de chaque situation. Cette étape initiale pose les bases d'une relation de confiance qui va s'installer dans la durée, et c'est pour cela qu'elle mérite du temps et de l'attention. Un bon accompagnement commence toujours par une bonne écoute. Vous envisagez de faire appel à une conciergerie ? Parlons-en ensemble lors d'un premier échange.</p>
+    <p class="hashtags">#ProximiteHumaine #ConciergerieImmobiliere #AccompagnementSurMesure #Herault #ProprietairesSereins #Confiance #Occitanie</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YIapGEtsznpb9OvdAC39wgaioGYRStMhGSZzA6OrSlU">
+      <input type="hidden" name="post_id" value="BATCH_20261105_2134_P07">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_2134">
+      <input type="hidden" name="token" value="20261105_212055">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=19guXVCvPGzUHVz8zGaLqxtwDU8R4TmGH&sz=w1200" alt="BATCH_20261105_2134_P08" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-10</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_2134_P08</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Après plusieurs mois, un propriétaire nous a confié ce qui a changé</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Ce qui a vraiment changé pour lui
+    </div>
+
+    <p class="caption">Après plusieurs mois d'accompagnement, un propriétaire nous expliquait récemment ce qui avait vraiment changé pour lui : moins d'appels stressants, moins d'incertitude sur l'état de son bien, et surtout la sensation de ne plus porter seul cette charge mentale. Ce genre de retour illustre bien ce que l'on cherche à offrir au quotidien, une tranquillité concrète qui repose sur un suivi régulier et une communication claire. La sérénité ne se décrète pas, elle se construit mois après mois, à travers des échanges réguliers, des réponses rapides aux questions et une présence fiable sur le terrain. Ce sont ces témoignages, simples et sincères, qui rappellent pourquoi ce métier prend tout son sens lorsqu'il est exercé avec rigueur et attention. Chaque propriétaire a son histoire, et chacune mérite d'être accompagnée avec le même sérieux. Vous aussi vous aimeriez retrouver cette tranquillité ? Contactez-nous pour en discuter.</p>
+    <p class="hashtags">#TemoignageClient #ConciergerieImmobiliere #Serenite #Herault #ProprietairesSereins #Confiance #GestionLocative</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YIapGEtsznpb9OvdAC39wgaioGYRStMhGSZzA6OrSlU">
+      <input type="hidden" name="post_id" value="BATCH_20261105_2134_P08">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_2134">
+      <input type="hidden" name="token" value="20261105_212055">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+
+    <p class="footer-note">
+      Une fois un post validé, il sera considéré comme prêt pour la programmation et la publication.
+    </p>
+  </div>
+
+  <iframe name="hidden_webhook_frame" style="display:none;"></iframe>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const forms = document.querySelectorAll(".validation-form");
+
+      function pluralizeRemaining(remaining) {
+        if (remaining > 1) {
+          return remaining + " modifications restantes";
+        }
+        if (remaining === 1) {
+          return "1 modification restante";
+        }
+        return "0 modification restante";
+      }
+
+      function applyModificationState(form) {
+        const version = parseInt(form.getAttribute("data-version") || "1", 10);
+        const remaining = Math.max(0, 2 - version);
+
+        const textarea = form.querySelector("textarea");
+        const remainingBadge = form.querySelector(".remaining-badge");
+        const modificationButtons = form.querySelectorAll(".modification-button");
+        const modificationNote = form.querySelector(".modification-note");
+
+        if (remainingBadge) {
+          remainingBadge.textContent = pluralizeRemaining(remaining);
+        }
+
+        modificationButtons.forEach(function (button) {
+          const baseLabel = button.getAttribute("data-base-label") || button.textContent.trim();
+          button.textContent = baseLabel + " (" + remaining + ")";
+
+          if (remaining === 0) {
+            button.disabled = true;
+            button.classList.add("button-disabled");
+          } else {
+            button.disabled = false;
+            button.classList.remove("button-disabled");
+          }
+        });
+
+        if (remaining === 0) {
+          if (textarea) {
+            textarea.disabled = true;
+            textarea.placeholder = "Aucune modification automatique restante pour ce post.";
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.add("visible");
+            modificationNote.innerHTML = "Ce post a déjà utilisé sa modification automatique. Vous pouvez encore le valider, mais les boutons de modification sont désormais désactivés.";
+          }
+        } else {
+          if (textarea) {
+            textarea.disabled = false;
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.remove("visible");
+          }
+        }
+
+        return remaining;
+      }
+
+      forms.forEach(function (form) {
+        let statusBox = form.querySelector(".form-status");
+
+        if (!statusBox) {
+          statusBox = document.createElement("div");
+          statusBox.className = "form-status";
+          form.appendChild(statusBox);
+        }
+
+        const actionInput = form.querySelector('input[name="action"]');
+        const actionButtons = form.querySelectorAll("button[data-action]");
+
+        applyModificationState(form);
+
+        actionButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            if (actionInput) {
+              actionInput.value = button.getAttribute("data-action");
+            }
+          });
+        });
+
+        form.addEventListener("submit", function (event) {
+          const action = actionInput ? actionInput.value : "";
+          const remaining = applyModificationState(form);
+
+          if (action !== "validate" && remaining === 0) {
+            event.preventDefault();
+            statusBox.innerHTML = "Aucune modification automatique restante pour ce post.";
+            statusBox.className = "form-status error";
+            return;
+          }
+
+          const textarea = form.querySelector("textarea");
+          const buttons = form.querySelector(".buttons");
+          const allButtons = form.querySelectorAll("button");
+          const statusBadge = form.closest(".post-card").querySelector(".badge.status");
+
+          statusBox.innerHTML = "Envoi en cours...";
+          statusBox.className = "form-status sending";
+
+          setTimeout(function () {
+            allButtons.forEach(function (button) {
+              button.disabled = true;
+              button.style.opacity = "0.6";
+              button.style.cursor = "not-allowed";
+            });
+          }, 50);
+
+          setTimeout(function () {
+            if (textarea) {
+              textarea.style.display = "none";
+            }
+
+            if (buttons) {
+              buttons.style.display = "none";
+            }
+
+            const modificationNote = form.querySelector(".modification-note");
+            if (modificationNote) {
+              modificationNote.style.display = "none";
+            }
+
+            if (action === "validate") {
+              statusBox.innerHTML = "Post validé ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Validé";
+              }
+            } else {
+              statusBox.innerHTML = "Demande envoyée ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Modification demandée";
+              }
+
+              const remainingBadge = form.querySelector(".remaining-badge");
+              if (remainingBadge) {
+                remainingBadge.textContent = "0 modification restante";
+              }
+            }
+
+            statusBox.className = "form-status success";
+          }, 900);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
