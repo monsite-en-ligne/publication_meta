@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts Instagram</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 42px 20px 60px;
+    }
+
+    .page-header {
+      margin-bottom: 34px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.15;
+      color: #111827;
+    }
+
+    .page-header p {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .post-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .post-preview {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #111827;
+      border: 1px solid #e5e7eb;
+    }
+
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .post-content {
+      padding: 4px 0;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .badge.date {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .badge.status {
+      background: #ecfdf5;
+      color: #166534;
+    }
+
+    .badge.remaining {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .post-content h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 1.25;
+      color: #111827;
+    }
+
+    .integrated-title {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .integrated-title strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+    }
+
+    .caption {
+      margin: 0 0 16px;
+      line-height: 1.6;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .hashtags {
+      margin: 0 0 20px;
+      color: #2563eb;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    form {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #111827;
+    }
+
+    textarea:disabled {
+      background: #f3f4f6;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 17px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      background: #111827;
+      color: white;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    button[data-action="validate"] {
+      background: #16a34a;
+    }
+
+    button[data-action="change_image"] {
+      background: #7c3aed;
+    }
+
+    button[data-action="change_text"] {
+      background: #2563eb;
+    }
+
+    button[data-action="change_text_image"] {
+      background: #dc2626;
+    }
+
+    .button-disabled,
+    button:disabled {
+      background: #d1d5db !important;
+      color: #6b7280 !important;
+      cursor: not-allowed !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .modification-note {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .modification-note.visible {
+      display: block;
+    }
+
+    .form-status {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .form-status.sending {
+      display: block;
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .form-status.success {
+      display: block;
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .form-status.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+
+      .post-preview {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        padding: 28px 14px 46px;
+      }
+
+      .post-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .post-content h2 {
+        font-size: 21px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Vos posts Instagram à valider</h1>
+      <p>
+        Voici les publications statiques générées pour le mois.
+        Chaque visuel est pensé comme une publication finale prête à être publiée.
+        Vous pouvez valider chaque post ou demander une modification.
+      </p>
+    </div>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1TQbhBtBCoyEAmzRIVTcKvyWpSrXQus9P&sz=w1200" alt="BATCH_20261105_0007_P01" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-10</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0007_P01</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Une zone d activité en périphérie, ça se dessert aussi avec précision</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Précision garantie jusqu'en périphérie
+    </div>
+
+    <p class="caption">Les rendez vous professionnels ne se limitent pas au centre ville. Zones industrielles, parcs d activités, sièges d entreprises en périphérie de Rennes, chaque adresse est connue et chaque itinéraire est pensé pour arriver à l heure, sans détour inutile. Que vous soyez salarié en déplacement ou visiteur attendu pour une réunion, la prise en charge reste la même, soignée et ponctuelle. Ce sont souvent ces trajets moins visibles qui demandent le plus de rigueur, et c est exactement ce que propose mysamvtc sur l ensemble de l agglomération rennaise et ses environs. Besoin d un trajet vers une entreprise en périphérie, direction mysamvtc.fr pour réserver.</p>
+    <p class="hashtags">#VTCRennes #TransportProfessionnel #RennesEntreprise #ChauffeurPrive #MysamVTC #RennesBusiness #DeplacementPro</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YPGAy3OzTA2Xz3O6wNjTOwX7MzTG5BGHcdaHhwDXtPM">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0007_P01">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0007">
+      <input type="hidden" name="token" value="20260908_205926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1Qo9sEEJ9CPC55roNUNWwB0kK_ui3nVin&sz=w1200" alt="BATCH_20261105_0007_P02" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-12</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0007_P02</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Le sérieux se voit avant même d ouvrir la portière</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Le sérieux se voit avant la portière
+    </div>
+
+    <p class="caption">Une tenue soignée, un véhicule impeccable, c est souvent le premier signal envoyé à un client avant même d échanger un mot. Chez mysamvtc, cette attention portée à la présentation n est pas un détail, c est une façon de respecter chaque passager, qu il s agisse d un trajet professionnel ou plus personnel. Un véhicule propre et bien entretenu, une tenue adaptée, ce sont des éléments simples mais qui installent immédiatement un climat de confiance. C est aussi ce qui distingue un service VTC pensé pour durer dans le temps, avec une clientèle exigeante sur Rennes et ses environs. Pour vivre cette expérience lors de votre prochain trajet, direction mysamvtc.fr.</p>
+    <p class="hashtags">#VTCPremium #ChauffeurProfessionnel #RennesVTC #MysamVTC #ServicePremium #ConfianceClient</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YPGAy3OzTA2Xz3O6wNjTOwX7MzTG5BGHcdaHhwDXtPM">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0007_P02">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0007">
+      <input type="hidden" name="token" value="20260908_205926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1Di0aDSDMjdK3GcH1eJe3J8PbgFfjX9qP&sz=w1200" alt="BATCH_20261105_0007_P03" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-17</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0007_P03</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Réserver un trajet ne devrait pas demander de créer un compte</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Réservez sans créer de compte
+    </div>
+
+    <p class="caption">Beaucoup pensent qu une réservation en ligne implique forcément une inscription, un mot de passe à retenir, des étapes à n en plus finir. Sur mysamvtc.fr, ce n est pas le cas. Il suffit d indiquer le point de départ, la destination et l horaire souhaité pour obtenir une estimation et valider sa réservation, sans créer de compte au préalable. L idée est simple, rendre la réservation aussi rapide que naturelle, que ce soit pour un trajet ponctuel ou récurrent. C est aussi ce qui permet de gagner du temps au moment où on en a le moins, juste avant de partir. Pour tester la rapidité du parcours, rendez vous sur mysamvtc.fr.</p>
+    <p class="hashtags">#ReservationEnLigne #VTCRennes #MysamVTC #SimpliciteAvantTout #ChauffeurVTC #RennesTransport</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YPGAy3OzTA2Xz3O6wNjTOwX7MzTG5BGHcdaHhwDXtPM">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0007_P03">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0007">
+      <input type="hidden" name="token" value="20260908_205926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1dEiHOfgnB1X7-jUUcVuZzguXh3LMCMK5&sz=w1200" alt="BATCH_20261105_0007_P04" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-19</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0007_P04</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Avec les trajets réguliers, certains détails n ont plus besoin d être expliqués</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      La confiance qui s installe avec le temps
+    </div>
+
+    <p class="caption">Un client qui réserve régulièrement n a souvent plus besoin de préciser certaines habitudes, l adresse habituelle, le créneau préféré, la façon dont il aime voyager. Cette connaissance qui s installe avec le temps rend chaque prise en charge plus fluide, presque naturelle. Ce n est pas une question de statut particulier, simplement le résultat d une relation de confiance qui se construit trajet après trajet. C est aussi ce qui fait la différence entre un simple service de transport et un accompagnement pensé sur la durée. Si vous faites partie de ces clients réguliers, vous savez probablement déjà de quoi il s agit. Pour en faire l expérience, direction mysamvtc.fr.</p>
+    <p class="hashtags">#ClientFidele #VTCRennes #MysamVTC #RelationClient #ServiceSurMesure #ChauffeurPrive</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YPGAy3OzTA2Xz3O6wNjTOwX7MzTG5BGHcdaHhwDXtPM">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0007_P04">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0007">
+      <input type="hidden" name="token" value="20260908_205926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1hK6rfzxitn47aOv0CU_D_x7lszgsiuvr&sz=w1200" alt="BATCH_20261105_0007_P05" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-24</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0007_P05</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un tarif ne tombe jamais au hasard, voici ce qui entre en jeu</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Un tarif ne tombe jamais au hasard
+    </div>
+
+    <p class="caption">La distance, l horaire, le type de trajet, la circulation estimée, plusieurs éléments entrent en compte dans le calcul d un tarif VTC. C est justement pour cette raison qu il est difficile de donner un prix exact au téléphone sans connaître tous ces paramètres. La simulation disponible sur mysamvtc.fr permet d obtenir une estimation fiable en quelques secondes, en prenant en compte ces critères automatiquement. Cela évite les approximations et permet d avoir une vision claire avant même de réserver. Plutôt que de deviner un prix par téléphone, autant avoir une réponse précise directement en ligne. La simulation est accessible à tout moment sur mysamvtc.fr.</p>
+    <p class="hashtags">#SimulationTarif #VTCRennes #MysamVTC #TarifTransparent #ReservationEnLigne #ChauffeurVTC</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YPGAy3OzTA2Xz3O6wNjTOwX7MzTG5BGHcdaHhwDXtPM">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0007_P05">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0007">
+      <input type="hidden" name="token" value="20260908_205926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1iXPU2g2ApNzfVDnLw9_UXLZEuj828bu4&sz=w1200" alt="BATCH_20261105_0007_P06" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-26</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0007_P06</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Retrouver un trajet passé ne demande que quelques secondes</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Votre historique de trajets en quelques secondes
+    </div>
+
+    <p class="caption">Pour les clients réguliers ou les professionnels qui ont besoin de justifier leurs déplacements, retrouver un trajet effectué peut parfois devenir fastidieux. Avec l application mysamvtc rennes, l historique des courses reste accessible directement depuis le téléphone, sans avoir à chercher un ancien message ou un reçu papier. C est une fonctionnalité pensée pour simplifier le suivi au quotidien, que ce soit pour une note de frais ou simplement pour retrouver les détails d un trajet précédent. Un outil pratique de plus, pensé pour accompagner une utilisation régulière du service. L application mysamvtc rennes est disponible sur Android et Apple.</p>
+    <p class="hashtags">#ApplicationVTC #MysamVTC #RennesVTC #HistoriqueTrajet #ChauffeurPrive #OutilPratique</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YPGAy3OzTA2Xz3O6wNjTOwX7MzTG5BGHcdaHhwDXtPM">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0007_P06">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0007">
+      <input type="hidden" name="token" value="20260908_205926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1Xm2oTJo_tqjqQJyeq8LaTudI1vuqOiuY&sz=w1200" alt="BATCH_20261105_0007_P07" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-01</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0007_P07</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un vol à 6h ou un retour après minuit, le service reste disponible</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Disponible dès l'aube et tard le soir
+    </div>
+
+    <p class="caption">Les horaires atypiques font partie du quotidien de nombreux voyageurs, un départ très tôt pour un vol matinal, un retour tardif après un évènement qui s est prolongé. Ces créneaux, souvent plus complexes à organiser, font partie intégrante du service proposé par mysamvtc sur Rennes et ses environs. L objectif reste le même, assurer une prise en charge ponctuelle et sereine, quelle que soit l heure. Pas besoin de renoncer à la tranquillité simplement parce que l horaire sort de l ordinaire. Pour anticiper un trajet matinal ou tardif, direction mysamvtc.fr ou l application mysamvtc rennes.</p>
+    <p class="hashtags">#VTCRennes #TransportAeroport #MysamVTC #HorairesFlexibles #ChauffeurPrive #RennesTransport</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YPGAy3OzTA2Xz3O6wNjTOwX7MzTG5BGHcdaHhwDXtPM">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0007_P07">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0007">
+      <input type="hidden" name="token" value="20260908_205926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=10jL8tmce162rchJ8wh9J7bQH6jiFa8En&sz=w1200" alt="BATCH_20261105_0007_P08" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-03</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261105_0007_P08</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Avant chaque course, un même rituel se répète en coulisses</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Le rituel invisible avant chaque course
+    </div>
+
+    <p class="caption">Avant chaque prise en charge, quelques vérifications simples mais essentielles sont effectuées, propreté intérieure, état général du véhicule, confort des sièges, température à bord. Ce sont des gestes qui ne se voient pas forcément au premier regard, mais qui font toute la différence une fois installé à bord. Cette préparation systématique fait partie des habitudes qui permettent de proposer un service constant, trajet après trajet, qu il s agisse d un déplacement court ou plus long. C est aussi cette rigueur silencieuse qui construit la réputation d un service VTC sur la durée. Pour découvrir ce soin apporté à chaque détail, réservez votre prochain trajet sur mysamvtc.fr.</p>
+    <p class="hashtags">#ServicePremium #VTCRennes #MysamVTC #ConfortAbord #ChauffeurProfessionnel #CoulissesVTC</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1YPGAy3OzTA2Xz3O6wNjTOwX7MzTG5BGHcdaHhwDXtPM">
+      <input type="hidden" name="post_id" value="BATCH_20261105_0007_P08">
+      <input type="hidden" name="batch_id" value="BATCH_20261105_0007">
+      <input type="hidden" name="token" value="20260908_205926">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+
+    <p class="footer-note">
+      Une fois un post validé, il sera considéré comme prêt pour la programmation et la publication.
+    </p>
+  </div>
+
+  <iframe name="hidden_webhook_frame" style="display:none;"></iframe>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const forms = document.querySelectorAll(".validation-form");
+
+      function pluralizeRemaining(remaining) {
+        if (remaining > 1) {
+          return remaining + " modifications restantes";
+        }
+        if (remaining === 1) {
+          return "1 modification restante";
+        }
+        return "0 modification restante";
+      }
+
+      function applyModificationState(form) {
+        const version = parseInt(form.getAttribute("data-version") || "1", 10);
+        const remaining = Math.max(0, 2 - version);
+
+        const textarea = form.querySelector("textarea");
+        const remainingBadge = form.querySelector(".remaining-badge");
+        const modificationButtons = form.querySelectorAll(".modification-button");
+        const modificationNote = form.querySelector(".modification-note");
+
+        if (remainingBadge) {
+          remainingBadge.textContent = pluralizeRemaining(remaining);
+        }
+
+        modificationButtons.forEach(function (button) {
+          const baseLabel = button.getAttribute("data-base-label") || button.textContent.trim();
+          button.textContent = baseLabel + " (" + remaining + ")";
+
+          if (remaining === 0) {
+            button.disabled = true;
+            button.classList.add("button-disabled");
+          } else {
+            button.disabled = false;
+            button.classList.remove("button-disabled");
+          }
+        });
+
+        if (remaining === 0) {
+          if (textarea) {
+            textarea.disabled = true;
+            textarea.placeholder = "Aucune modification automatique restante pour ce post.";
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.add("visible");
+            modificationNote.innerHTML = "Ce post a déjà utilisé sa modification automatique. Vous pouvez encore le valider, mais les boutons de modification sont désormais désactivés.";
+          }
+        } else {
+          if (textarea) {
+            textarea.disabled = false;
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.remove("visible");
+          }
+        }
+
+        return remaining;
+      }
+
+      forms.forEach(function (form) {
+        let statusBox = form.querySelector(".form-status");
+
+        if (!statusBox) {
+          statusBox = document.createElement("div");
+          statusBox.className = "form-status";
+          form.appendChild(statusBox);
+        }
+
+        const actionInput = form.querySelector('input[name="action"]');
+        const actionButtons = form.querySelectorAll("button[data-action]");
+
+        applyModificationState(form);
+
+        actionButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            if (actionInput) {
+              actionInput.value = button.getAttribute("data-action");
+            }
+          });
+        });
+
+        form.addEventListener("submit", function (event) {
+          const action = actionInput ? actionInput.value : "";
+          const remaining = applyModificationState(form);
+
+          if (action !== "validate" && remaining === 0) {
+            event.preventDefault();
+            statusBox.innerHTML = "Aucune modification automatique restante pour ce post.";
+            statusBox.className = "form-status error";
+            return;
+          }
+
+          const textarea = form.querySelector("textarea");
+          const buttons = form.querySelector(".buttons");
+          const allButtons = form.querySelectorAll("button");
+          const statusBadge = form.closest(".post-card").querySelector(".badge.status");
+
+          statusBox.innerHTML = "Envoi en cours...";
+          statusBox.className = "form-status sending";
+
+          setTimeout(function () {
+            allButtons.forEach(function (button) {
+              button.disabled = true;
+              button.style.opacity = "0.6";
+              button.style.cursor = "not-allowed";
+            });
+          }, 50);
+
+          setTimeout(function () {
+            if (textarea) {
+              textarea.style.display = "none";
+            }
+
+            if (buttons) {
+              buttons.style.display = "none";
+            }
+
+            const modificationNote = form.querySelector(".modification-note");
+            if (modificationNote) {
+              modificationNote.style.display = "none";
+            }
+
+            if (action === "validate") {
+              statusBox.innerHTML = "Post validé ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Validé";
+              }
+            } else {
+              statusBox.innerHTML = "Demande envoyée ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Modification demandée";
+              }
+
+              const remainingBadge = form.querySelector(".remaining-badge");
+              if (remainingBadge) {
+                remainingBadge.textContent = "0 modification restante";
+              }
+            }
+
+            statusBox.className = "form-status success";
+          }, 900);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
