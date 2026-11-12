@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts Instagram</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 42px 20px 60px;
+    }
+
+    .page-header {
+      margin-bottom: 34px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.15;
+      color: #111827;
+    }
+
+    .page-header p {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .post-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .post-preview {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #111827;
+      border: 1px solid #e5e7eb;
+    }
+
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .post-content {
+      padding: 4px 0;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .badge.date {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .badge.status {
+      background: #ecfdf5;
+      color: #166534;
+    }
+
+    .badge.remaining {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .post-content h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 1.25;
+      color: #111827;
+    }
+
+    .integrated-title {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .integrated-title strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+    }
+
+    .caption {
+      margin: 0 0 16px;
+      line-height: 1.6;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .hashtags {
+      margin: 0 0 20px;
+      color: #2563eb;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    form {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #111827;
+    }
+
+    textarea:disabled {
+      background: #f3f4f6;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 17px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      background: #111827;
+      color: white;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    button[data-action="validate"] {
+      background: #16a34a;
+    }
+
+    button[data-action="change_image"] {
+      background: #7c3aed;
+    }
+
+    button[data-action="change_text"] {
+      background: #2563eb;
+    }
+
+    button[data-action="change_text_image"] {
+      background: #dc2626;
+    }
+
+    .button-disabled,
+    button:disabled {
+      background: #d1d5db !important;
+      color: #6b7280 !important;
+      cursor: not-allowed !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .modification-note {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .modification-note.visible {
+      display: block;
+    }
+
+    .form-status {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .form-status.sending {
+      display: block;
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .form-status.success {
+      display: block;
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .form-status.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+
+      .post-preview {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        padding: 28px 14px 46px;
+      }
+
+      .post-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .post-content h2 {
+        font-size: 21px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Vos posts Instagram à valider</h1>
+      <p>
+        Voici les publications statiques générées pour le mois.
+        Chaque visuel est pensé comme une publication finale prête à être publiée.
+        Vous pouvez valider chaque post ou demander une modification.
+      </p>
+    </div>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1Wa7gT_JRdp2D1ZygCmT16C1nVjDisxlW&sz=w1200" alt="BATCH_20261112_1334_P01" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-24</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261112_1334_P01</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Déléguer ne veut pas dire ne plus rien voir</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Déléguer sans perdre le contrôle
+    </div>
+
+    <p class="caption">Confier son logement ne signifie pas perdre le fil de ce qui s'y passe. Avec l'application de suivi NILES, vous consultez à tout moment vos réservations, votre calendrier et les informations liées à votre bien. Vous savez qui arrive, quand, et comment se déroule la gestion au quotidien. C'est souvent la première inquiétude des propriétaires qui envisagent de déléguer : garder un minimum de visibilité sur leur investissement. Notre objectif n'est pas de vous mettre à l'écart, mais de vous donner les bons outils pour rester informé sans avoir à tout gérer vous-même. La tranquillité d'esprit commence par la transparence. Vous avez des questions sur le fonctionnement de l'application ? N'hésitez pas à nous écrire.</p>
+    <p class="hashtags">#conciergerieréunion #locationsaisonnière #gestionlocative #airbnbréunion #cotéouest #investisseurimmobilier</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1TPX0DKCLBZhSb_MDQ1dp00dUnPg6TaXtX8ZjqSqbvhg">
+      <input type="hidden" name="post_id" value="BATCH_20261112_1334_P01">
+      <input type="hidden" name="batch_id" value="BATCH_20261112_1334">
+      <input type="hidden" name="token" value="20261112_132020">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1bn7pogSXqruSkJ0x32cPMF7w6Oh-8DLx&sz=w1200" alt="BATCH_20261112_1334_P02" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-11-26</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261112_1334_P02</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Faire classer son logement, sans se perdre dans les démarches</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Le classement expliqué simplement, étape par étape
+    </div>
+
+    <p class="caption">Le classement en meublé de tourisme peut valoriser votre logement, mais la démarche reste souvent floue pour les propriétaires. NILES propose un accompagnement clé en main : une pré-visite avec la grille officielle pour estimer la catégorie accessible, une liste chiffrée des équipements à prévoir si besoin, puis la prise de rendez-vous avec un organisme agréé et la préparation complète du dossier. Le jour de l'inspection, nous sommes présents à vos côtés. Cette prestation s'adresse aux propriétaires qui souhaitent avancer sur ce sujet sans forcément déléguer l'ensemble de leur gestion locative. Si vous confiez ensuite votre logement à NILES dans les trois mois, le montant de la prestation est déduit. Vous vous posez des questions sur votre éligibilité ? Parlons-en ensemble.</p>
+    <p class="hashtags">#meubledetourisme #classementtouristique #locationsaisonnière #conciergerieréunion #cotéouestreunion #investisseurimmobilier</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1TPX0DKCLBZhSb_MDQ1dp00dUnPg6TaXtX8ZjqSqbvhg">
+      <input type="hidden" name="post_id" value="BATCH_20261112_1334_P02">
+      <input type="hidden" name="batch_id" value="BATCH_20261112_1334">
+      <input type="hidden" name="token" value="20261112_132020">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=15NGwjbuylp1UIX24W81YMkKAcIm63c_y&sz=w1200" alt="BATCH_20261112_1334_P03" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-01</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261112_1334_P03</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Boucan Canot, Saint Gilles, Saint Leu : trois ambiances, trois logiques</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Trois lieux, trois logiques saisonnières
+    </div>
+
+    <p class="caption">La demande touristique ne se comporte pas de la même façon tout au long de l'année sur la côte Ouest. Entre Boucan Canot, Saint Gilles les Bains et Saint Leu, les profils de voyageurs, les périodes d'affluence et les attentes diffèrent selon les saisons et les événements locaux. Une stratégie tarifaire efficace ne peut pas ignorer ces nuances : ce qui fonctionne en haute saison à Saint Gilles n'est pas forcément pertinent à Saint Leu en période plus calme. C'est cette connaissance fine du terrain qui permet d'ajuster les prix au bon moment, plutôt que de suivre des moyennes générales qui ne reflètent pas la réalité locale. Gérer un logement sur cette zone demande une attention constante aux spécificités de chaque quartier. Vous souhaitez échanger sur votre secteur en particulier ? Contactez-nous.</p>
+    <p class="hashtags">#cotéouestreunion #saintgilles #boucancanot #saintleu #locationsaisonnière #reunionisland #gestionlocative</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1TPX0DKCLBZhSb_MDQ1dp00dUnPg6TaXtX8ZjqSqbvhg">
+      <input type="hidden" name="post_id" value="BATCH_20261112_1334_P03">
+      <input type="hidden" name="batch_id" value="BATCH_20261112_1334">
+      <input type="hidden" name="token" value="20261112_132020">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1eDeh-3B-hJa_i_IL09VCGXLgW8uv4x89&sz=w1200" alt="BATCH_20261112_1334_P04" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-03</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261112_1334_P04</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Derrière chaque logement impeccable, une coordination précise</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Une coordination précise, invisible mais essentielle
+    </div>
+
+    <p class="caption">Un ménage de qualité hôtelière, une blanchisserie fiable, une petite maintenance réactive : rien de tout cela ne fonctionne sans une organisation rigoureuse en coulisses. Chez NILES, nous coordonnons un réseau de prestataires locaux pour chaque logement, avec un suivi constant de la qualité des interventions. Chaque prestation de ménage est contrôlée, parfois accompagnée d'une vidéo horodatée, avant l'arrivée des voyageurs suivants. Cette supervision quotidienne permet de maintenir un niveau d'exigence stable, logement après logement, sans que le propriétaire ait à s'en soucier. C'est un travail discret, mais essentiel pour la satisfaction des voyageurs et la tranquillité des propriétaires. Vous voulez en savoir plus sur notre fonctionnement au quotidien ? N'hésitez pas à nous poser vos questions.</p>
+    <p class="hashtags">#conciergerieréunion #menagehotelier #gestionlocative #cotéouestreunion #airbnbréunion #organisation</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1TPX0DKCLBZhSb_MDQ1dp00dUnPg6TaXtX8ZjqSqbvhg">
+      <input type="hidden" name="post_id" value="BATCH_20261112_1334_P04">
+      <input type="hidden" name="batch_id" value="BATCH_20261112_1334">
+      <input type="hidden" name="token" value="20261112_132020">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1wAjrfIU8qlYXCKrxy-elxm-OQG6rzCll&sz=w1200" alt="BATCH_20261112_1334_P05" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-08</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261112_1334_P05</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Votre annonce est-elle vraiment optimisée pour convertir ?</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Votre annonce convertit-elle vraiment ?
+    </div>
+
+    <p class="caption">Un titre peu accrocheur, des photos sombres, une description incomplète : autant d'éléments qui peuvent faire fuir un voyageur avant même qu'il ne lise les détails de votre logement. Sur Airbnb ou Booking.com, l'annonce est souvent le seul point de contact avant la réservation. Le titre doit attirer l'attention, les photos doivent valoriser les espaces, la description doit répondre aux questions pratiques, et les équipements mis en avant doivent correspondre aux attentes des voyageurs recherchés. Chaque détail compte dans la décision finale. Une annonce bien construite ne garantit pas tout, mais elle améliore clairement les chances de transformer une visite en réservation. C'est un travail d'optimisation continue, pas une tâche ponctuelle. Vous voulez un avis sur votre annonce actuelle ? Parlons-en.</p>
+    <p class="hashtags">#optimisationannonce #airbnbtips #gestionlocative #conciergerieréunion #revenuemanagement #locationsaisonnière</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1TPX0DKCLBZhSb_MDQ1dp00dUnPg6TaXtX8ZjqSqbvhg">
+      <input type="hidden" name="post_id" value="BATCH_20261112_1334_P05">
+      <input type="hidden" name="batch_id" value="BATCH_20261112_1334">
+      <input type="hidden" name="token" value="20261112_132020">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+
+    <p class="footer-note">
+      Une fois un post validé, il sera considéré comme prêt pour la programmation et la publication.
+    </p>
+  </div>
+
+  <iframe name="hidden_webhook_frame" style="display:none;"></iframe>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const forms = document.querySelectorAll(".validation-form");
+
+      function pluralizeRemaining(remaining) {
+        if (remaining > 1) {
+          return remaining + " modifications restantes";
+        }
+        if (remaining === 1) {
+          return "1 modification restante";
+        }
+        return "0 modification restante";
+      }
+
+      function applyModificationState(form) {
+        const version = parseInt(form.getAttribute("data-version") || "1", 10);
+        const remaining = Math.max(0, 2 - version);
+
+        const textarea = form.querySelector("textarea");
+        const remainingBadge = form.querySelector(".remaining-badge");
+        const modificationButtons = form.querySelectorAll(".modification-button");
+        const modificationNote = form.querySelector(".modification-note");
+
+        if (remainingBadge) {
+          remainingBadge.textContent = pluralizeRemaining(remaining);
+        }
+
+        modificationButtons.forEach(function (button) {
+          const baseLabel = button.getAttribute("data-base-label") || button.textContent.trim();
+          button.textContent = baseLabel + " (" + remaining + ")";
+
+          if (remaining === 0) {
+            button.disabled = true;
+            button.classList.add("button-disabled");
+          } else {
+            button.disabled = false;
+            button.classList.remove("button-disabled");
+          }
+        });
+
+        if (remaining === 0) {
+          if (textarea) {
+            textarea.disabled = true;
+            textarea.placeholder = "Aucune modification automatique restante pour ce post.";
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.add("visible");
+            modificationNote.innerHTML = "Ce post a déjà utilisé sa modification automatique. Vous pouvez encore le valider, mais les boutons de modification sont désormais désactivés.";
+          }
+        } else {
+          if (textarea) {
+            textarea.disabled = false;
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.remove("visible");
+          }
+        }
+
+        return remaining;
+      }
+
+      forms.forEach(function (form) {
+        let statusBox = form.querySelector(".form-status");
+
+        if (!statusBox) {
+          statusBox = document.createElement("div");
+          statusBox.className = "form-status";
+          form.appendChild(statusBox);
+        }
+
+        const actionInput = form.querySelector('input[name="action"]');
+        const actionButtons = form.querySelectorAll("button[data-action]");
+
+        applyModificationState(form);
+
+        actionButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            if (actionInput) {
+              actionInput.value = button.getAttribute("data-action");
+            }
+          });
+        });
+
+        form.addEventListener("submit", function (event) {
+          const action = actionInput ? actionInput.value : "";
+          const remaining = applyModificationState(form);
+
+          if (action !== "validate" && remaining === 0) {
+            event.preventDefault();
+            statusBox.innerHTML = "Aucune modification automatique restante pour ce post.";
+            statusBox.className = "form-status error";
+            return;
+          }
+
+          const textarea = form.querySelector("textarea");
+          const buttons = form.querySelector(".buttons");
+          const allButtons = form.querySelectorAll("button");
+          const statusBadge = form.closest(".post-card").querySelector(".badge.status");
+
+          statusBox.innerHTML = "Envoi en cours...";
+          statusBox.className = "form-status sending";
+
+          setTimeout(function () {
+            allButtons.forEach(function (button) {
+              button.disabled = true;
+              button.style.opacity = "0.6";
+              button.style.cursor = "not-allowed";
+            });
+          }, 50);
+
+          setTimeout(function () {
+            if (textarea) {
+              textarea.style.display = "none";
+            }
+
+            if (buttons) {
+              buttons.style.display = "none";
+            }
+
+            const modificationNote = form.querySelector(".modification-note");
+            if (modificationNote) {
+              modificationNote.style.display = "none";
+            }
+
+            if (action === "validate") {
+              statusBox.innerHTML = "Post validé ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Validé";
+              }
+            } else {
+              statusBox.innerHTML = "Demande envoyée ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Modification demandée";
+              }
+
+              const remainingBadge = form.querySelector(".remaining-badge");
+              if (remainingBadge) {
+                remainingBadge.textContent = "0 modification restante";
+              }
+            }
+
+            statusBox.className = "form-status success";
+          }, 900);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
