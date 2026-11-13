@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation posts Instagram</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 42px 20px 60px;
+    }
+
+    .page-header {
+      margin-bottom: 34px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.15;
+      color: #111827;
+    }
+
+    .page-header p {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .post-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .post-preview {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #111827;
+      border: 1px solid #e5e7eb;
+    }
+
+    .post-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .post-content {
+      padding: 4px 0;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .badge.date {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .badge.status {
+      background: #ecfdf5;
+      color: #166534;
+    }
+
+    .badge.remaining {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .post-content h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 1.25;
+      color: #111827;
+    }
+
+    .integrated-title {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .integrated-title strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+    }
+
+    .caption {
+      margin: 0 0 16px;
+      line-height: 1.6;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .hashtags {
+      margin: 0 0 20px;
+      color: #2563eb;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    form {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #111827;
+    }
+
+    textarea:disabled {
+      background: #f3f4f6;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 17px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      background: #111827;
+      color: white;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    button[data-action="validate"] {
+      background: #16a34a;
+    }
+
+    button[data-action="change_image"] {
+      background: #7c3aed;
+    }
+
+    button[data-action="change_text"] {
+      background: #2563eb;
+    }
+
+    button[data-action="change_text_image"] {
+      background: #dc2626;
+    }
+
+    .button-disabled,
+    button:disabled {
+      background: #d1d5db !important;
+      color: #6b7280 !important;
+      cursor: not-allowed !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .modification-note {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .modification-note.visible {
+      display: block;
+    }
+
+    .form-status {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .form-status.sending {
+      display: block;
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .form-status.success {
+      display: block;
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .form-status.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .post-card {
+        grid-template-columns: 1fr;
+      }
+
+      .post-preview {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        padding: 28px 14px 46px;
+      }
+
+      .post-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .post-content h2 {
+        font-size: 21px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Vos posts Instagram à valider</h1>
+      <p>
+        Voici les publications statiques générées pour le mois.
+        Chaque visuel est pensé comme une publication finale prête à être publiée.
+        Vous pouvez valider chaque post ou demander une modification.
+      </p>
+    </div>
+
+    <div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1Fwszw4BxB1mXF8ddYEtATLiLn1o-bf3n&sz=w1200" alt="BATCH_20261113_0007_P01" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-01</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261113_0007_P01</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>La lumière, ce critère qu'on oublie trop souvent en premier</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      La lumière, premier critère d'un bon agencement
+    </div>
+
+    <p class="caption">Avant de choisir une couleur ou un meuble, on regarde toujours d'où vient la lumière. L'orientation d'un logement, la taille des ouvertures, la présence d'un vis-à-vis, tout cela influence directement les choix d'agencement et de matériaux. Un salon orienté plein sud n'aura pas les mêmes besoins qu'une pièce plus sombre côté cour. Parfois, il suffit de déplacer un miroir, d'ouvrir une circulation ou de revoir l'emplacement d'une fenêtre existante pour transformer complètement la perception d'un espace. Ce sont des détails qu'on intègre dès le début de la réflexion, pas en dernière minute. Prendre le temps d'observer comment la lumière se déplace dans une journée permet d'éviter bien des erreurs d'aménagement. Et vous, avez-vous déjà remarqué qu'une pièce chez vous manque cruellement de luminosité ? Parlons-en en commentaire.</p>
+    <p class="hashtags">#designinterieur #lareunion #renovationinterieur #luminosite #architectureinterieure #amenagementinterieur #decointerieur</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1dR-wc9AfJDbf6B-HzFQpEtaGmzzSd2gWt01w6nluiUA">
+      <input type="hidden" name="post_id" value="BATCH_20261113_0007_P01">
+      <input type="hidden" name="batch_id" value="BATCH_20261113_0007">
+      <input type="hidden" name="token" value="20260911_212712">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1g_LIbeOZFZpSglfg_qJCS2jRT14J3jii&sz=w1200" alt="BATCH_20261113_0007_P02" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-03</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261113_0007_P02</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Déléguer ne veut pas dire perdre le contrôle de son projet</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Déléguer, sans jamais perdre la main
+    </div>
+
+    <p class="caption">C'est l'une des craintes les plus fréquentes : confier son chantier à quelqu'un d'autre, est-ce renoncer à avoir son mot à dire ? En réalité, c'est l'inverse. Le rôle d'un coordinateur de chantier est justement de vous tenir informé à chaque étape clé, pas de décider à votre place. Vous validez les choix importants, vous êtes consulté avant chaque arbitrage, et vous gardez toujours la main sur votre projet. Ce qui change, c'est que vous n'avez plus à gérer seul la logistique du quotidien, les appels aux artisans ou les imprévus de planning. La confiance se construit avec de la transparence et des points réguliers, pas avec un silence radio pendant des semaines. L'objectif est de vous simplifier la vie, pas de vous mettre à l'écart de vos propres décisions. Avez-vous déjà hésité à déléguer un chantier par peur de perdre cette visibilité ? Dites-le-nous en commentaire.</p>
+    <p class="hashtags">#renovationreunion #suivichantier #designinterieur #lareunion #architecteinterieur #confiance #projetdeco</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1dR-wc9AfJDbf6B-HzFQpEtaGmzzSd2gWt01w6nluiUA">
+      <input type="hidden" name="post_id" value="BATCH_20261113_0007_P02">
+      <input type="hidden" name="batch_id" value="BATCH_20261113_0007">
+      <input type="hidden" name="token" value="20260911_212712">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1igz01Y7O2-dKZRocGAMTsB2a5bN7ia2W&sz=w1200" alt="BATCH_20261113_0007_P03" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-08</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261113_0007_P03</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Même cuisine, même structure, mais plus rien à voir</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Même cuisine, nouvelle vie
+    </div>
+
+    <p class="caption">Cette cuisine était fonctionnelle sur le papier, mais fermée sur elle-même, avec une circulation peu pratique au quotidien. Sans toucher à aucune structure porteuse, nous avons repensé l'agencement pour créer une meilleure fluidité entre la cuisine et l'espace de vie. Le résultat : une pièce plus ouverte, plus lumineuse, et surtout plus agréable à vivre au quotidien. Ce type de transformation montre bien qu'il n'est pas toujours nécessaire d'entreprendre de gros travaux structurels pour changer radicalement la perception d'un espace. Parfois, repenser l'implantation des meubles, revoir les points de circulation ou ouvrir visuellement une pièce suffit à redonner du souffle à un logement. C'est aussi ça, notre travail : trouver la solution la plus adaptée sans complexifier inutilement le chantier. Qu'est-ce qui vous bloque le plus dans votre cuisine actuelle ? Partagez-le en commentaire.</p>
+    <p class="hashtags">#avantapres #renovationcuisine #designinterieur #lareunion #amenagementinterieur #transformationinterieure</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1dR-wc9AfJDbf6B-HzFQpEtaGmzzSd2gWt01w6nluiUA">
+      <input type="hidden" name="post_id" value="BATCH_20261113_0007_P03">
+      <input type="hidden" name="batch_id" value="BATCH_20261113_0007">
+      <input type="hidden" name="token" value="20260911_212712">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1mrqVXh8QVtTT-DUsmxNjtsyVuEyW6Meg&sz=w1200" alt="BATCH_20261113_0007_P04" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-10</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261113_0007_P04</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un devis flou aujourd'hui, un litige possible demain</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Un devis clair protège votre tranquillité
+    </div>
+
+    <p class="caption">Un devis flou, c'est souvent la porte ouverte aux mauvaises surprises en cours de chantier. Quand les postes de dépenses ne sont pas clairement détaillés, il devient difficile de savoir exactement ce qui est inclus, et encore plus difficile de réagir en cas d'imprévu. Un devis structuré, poste par poste, permet au contraire de comprendre précisément à quoi correspond chaque dépense : matériaux, main-d'œuvre, finitions. Cette transparence évite les malentendus avec les artisans et limite les litiges une fois le chantier lancé. C'est aussi un outil de dialogue : si un ajustement est nécessaire en cours de route, il est plus simple de l'évaluer quand chaque ligne est claire dès le départ. Ce niveau de détail demande un peu plus de temps en amont, mais il fait gagner beaucoup de sérénité ensuite. Avez-vous déjà eu une mauvaise expérience avec un devis trop vague ? Racontez-nous en commentaire.</p>
+    <p class="hashtags">#budgetrenovation #devistravaux #renovationreunion #designinterieur #suivichantier #tranquilliteesprit</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1dR-wc9AfJDbf6B-HzFQpEtaGmzzSd2gWt01w6nluiUA">
+      <input type="hidden" name="post_id" value="BATCH_20261113_0007_P04">
+      <input type="hidden" name="batch_id" value="BATCH_20261113_0007">
+      <input type="hidden" name="token" value="20260911_212712">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1y8mYwcgFFc5wycZRLCaJSgORGX583qBG&sz=w1200" alt="BATCH_20261113_0007_P05" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-15</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261113_0007_P05</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un coaching déco à distance, ça ressemble à quoi concrètement ?</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Un coaching déco à distance, concrètement ?
+    </div>
+
+    <p class="caption">Beaucoup imaginent qu'un accompagnement déco nécessite forcément une présence physique. Pourtant, le coaching à distance fonctionne très bien, à condition d'avoir les bons outils. Tout commence par des photos de votre espace sous différents angles, accompagnées si possible d'un plan, même simple. À partir de ces éléments, nous construisons un moodboard qui reflète vos envies, vos contraintes et l'ambiance recherchée. Viennent ensuite des recommandations personnalisées : choix de couleurs, suggestions de matières, pistes d'agencement adaptées à votre pièce et à votre quotidien. Tout se fait par échanges réguliers, que ce soit par message ou en visio, pour affiner les propositions au fur et à mesure. C'est une solution accessible depuis n'importe où sur l'île, idéale si vous voulez être guidé sans avoir besoin d'un suivi de chantier complet. Seriez-vous tenté par ce format à distance pour votre intérieur ? Dites-le-nous en commentaire.</p>
+    <p class="hashtags">#coachingdeco #decointerieur #lareunion #designadistance #moodboard #inspirationdeco</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1dR-wc9AfJDbf6B-HzFQpEtaGmzzSd2gWt01w6nluiUA">
+      <input type="hidden" name="post_id" value="BATCH_20261113_0007_P05">
+      <input type="hidden" name="batch_id" value="BATCH_20261113_0007">
+      <input type="hidden" name="token" value="20260911_212712">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1L8t09B8TMJDynbce3ojA1YE0mtxecXe6&sz=w1200" alt="BATCH_20261113_0007_P06" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-17</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261113_0007_P06</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Un matériau qui tient en métropole ne tient pas forcément ici</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      Ici, le climat ne pardonne aucune erreur
+    </div>
+
+    <p class="caption">L'humidité, la chaleur et les variations climatiques de l'île ne pardonnent pas les choix de matériaux inadaptés. Un revêtement ou une finition qui fonctionne très bien en métropole peut se dégrader rapidement sous le climat réunionnais. C'est pourquoi travailler avec des artisans habitués à ces spécificités fait une vraie différence sur la durabilité d'un projet. Ils connaissent les produits qui résistent mieux à l'humidité, les techniques de pose adaptées, et les pièges à éviter selon l'exposition du logement. Ce savoir-faire local permet d'anticiper des problèmes qui n'apparaîtraient parfois que plusieurs mois après la fin des travaux. Notre réseau d'artisans est sélectionné en partie pour cette connaissance du terrain, pas uniquement pour la qualité de leur travail sur le papier. C'est un critère souvent sous-estimé, mais essentiel pour un résultat qui dure dans le temps. Avez-vous déjà constaté une finition qui n'a pas supporté le climat ici ? Partagez votre expérience en commentaire.</p>
+    <p class="hashtags">#artisansreunion #climattropical #renovationreunion #designinterieur #lareunion #finitionsdurables</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1dR-wc9AfJDbf6B-HzFQpEtaGmzzSd2gWt01w6nluiUA">
+      <input type="hidden" name="post_id" value="BATCH_20261113_0007_P06">
+      <input type="hidden" name="batch_id" value="BATCH_20261113_0007">
+      <input type="hidden" name="token" value="20260911_212712">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1vlHlZRcHYot2lm_EYnrnHKpeTlaBprkB&sz=w1200" alt="BATCH_20261113_0007_P07" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-22</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261113_0007_P07</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Trois erreurs qu'on retrouve dans presque tous les logements</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 erreurs d'amenagement qu'on retrouve partout
+    </div>
+
+    <p class="caption">Sur le terrain, certaines erreurs d'aménagement reviennent très régulièrement, souvent sans que les propriétaires s'en rendent compte avant d'y être confrontés au quotidien. La première : négliger la circulation, en plaçant des meubles qui obligent à contourner ou à se faufiler dans une pièce. La deuxième : sous-estimer les besoins de rangement, ce qui finit par encombrer visuellement tout l'espace. La troisième : choisir un mobilier à la mode sans vérifier s'il correspond vraiment à l'usage réel de la pièce et à la taille de la famille. Ces erreurs ne sont pas graves en soi, mais elles s'accumulent et finissent par rendre un logement moins agréable à vivre qu'il ne pourrait l'être. La bonne nouvelle, c'est qu'elles s'anticipent facilement avec un peu de recul avant de se lancer. Reconnaissez-vous l'une de ces situations chez vous ? Dites-nous laquelle en commentaire.</p>
+    <p class="hashtags">#amenagementinterieur #erreursdeco #designinterieur #lareunion #conseilsdeco #inspirationinterieure</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1dR-wc9AfJDbf6B-HzFQpEtaGmzzSd2gWt01w6nluiUA">
+      <input type="hidden" name="post_id" value="BATCH_20261113_0007_P07">
+      <input type="hidden" name="batch_id" value="BATCH_20261113_0007">
+      <input type="hidden" name="token" value="20260911_212712">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+<div class="post-card">
+  <div class="post-preview">
+    <img src="https://drive.google.com/thumbnail?id=1_UBadHeBIZVglbvyh7aGE2RmNUI8U1dt&sz=w1200" alt="BATCH_20261113_0007_P08" />
+  </div>
+
+  <div class="post-content">
+    <div class="meta-row">
+      <span class="badge date">Date prévue : 2026-12-24</span>
+      <span class="badge status">À valider</span>
+      <span class="badge">BATCH_20261113_0007_P08</span>
+      <span class="badge remaining remaining-badge">1 modification restante</span>
+    </div>
+
+    <h2>Trois choses à préparer avant même notre premier échange</h2>
+
+    <div class="integrated-title">
+      <strong>Titre intégré dans le visuel</strong>
+      3 choses à préparer avant
+    </div>
+
+    <p class="caption">Avant de démarrer un projet, quelques éléments simples permettent de gagner beaucoup de temps et de clarté dès les premiers échanges. D'abord, rassembler quelques inspirations : photos, ambiances, styles qui vous parlent, même sans savoir les nommer précisément. Ensuite, réfléchir aux contraintes de votre quotidien, comme vos habitudes de vie, vos besoins en rangement ou la façon dont vous utilisez réellement chaque pièce. Enfin, avoir une idée, même approximative, de l'enveloppe que vous souhaitez consacrer au projet. Ce n'est pas un chiffre figé, mais un point de départ qui permet de cadrer les propositions dès le début, sans perdre de temps sur des pistes irréalistes. Plus ces éléments sont clairs en amont, plus le démarrage du projet est fluide et rapide pour tout le monde. Vous avez un projet en tête pour 2027 ? C'est le moment d'en parler et de poser les bases ensemble.</p>
+    <p class="hashtags">#projetdeco #renovationreunion #designinterieur #lareunion #amenagementinterieur #clesenmain #nouveauprojet</p>
+
+    <form
+      class="validation-form"
+      method="POST"
+      action="https://hook.eu2.make.com/holybarayo7yc3wu7j732maxnowwzci0"
+      target="hidden_webhook_frame"
+      data-version="1"
+    >
+      <input type="hidden" name="client_id" value="1dR-wc9AfJDbf6B-HzFQpEtaGmzzSd2gWt01w6nluiUA">
+      <input type="hidden" name="post_id" value="BATCH_20261113_0007_P08">
+      <input type="hidden" name="batch_id" value="BATCH_20261113_0007">
+      <input type="hidden" name="token" value="20260911_212712">
+      <input type="hidden" name="action" value="">
+
+      <textarea name="feedback" placeholder="Commentaire si vous souhaitez une modification"></textarea>
+
+      <div class="buttons">
+        <button type="submit" data-action="validate">Valider</button>
+        <button type="submit" class="modification-button" data-action="change_image" data-base-label="Changer le visuel">Changer le visuel</button>
+        <button type="submit" class="modification-button" data-action="change_text" data-base-label="Changer le texte">Changer le texte</button>
+        <button type="submit" class="modification-button" data-action="change_text_image" data-base-label="Changer texte + visuel">Changer texte + visuel</button>
+      </div>
+
+      <div class="modification-note"></div>
+      <div class="form-status"></div>
+    </form>
+  </div>
+</div>
+
+    <p class="footer-note">
+      Une fois un post validé, il sera considéré comme prêt pour la programmation et la publication.
+    </p>
+  </div>
+
+  <iframe name="hidden_webhook_frame" style="display:none;"></iframe>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const forms = document.querySelectorAll(".validation-form");
+
+      function pluralizeRemaining(remaining) {
+        if (remaining > 1) {
+          return remaining + " modifications restantes";
+        }
+        if (remaining === 1) {
+          return "1 modification restante";
+        }
+        return "0 modification restante";
+      }
+
+      function applyModificationState(form) {
+        const version = parseInt(form.getAttribute("data-version") || "1", 10);
+        const remaining = Math.max(0, 2 - version);
+
+        const textarea = form.querySelector("textarea");
+        const remainingBadge = form.querySelector(".remaining-badge");
+        const modificationButtons = form.querySelectorAll(".modification-button");
+        const modificationNote = form.querySelector(".modification-note");
+
+        if (remainingBadge) {
+          remainingBadge.textContent = pluralizeRemaining(remaining);
+        }
+
+        modificationButtons.forEach(function (button) {
+          const baseLabel = button.getAttribute("data-base-label") || button.textContent.trim();
+          button.textContent = baseLabel + " (" + remaining + ")";
+
+          if (remaining === 0) {
+            button.disabled = true;
+            button.classList.add("button-disabled");
+          } else {
+            button.disabled = false;
+            button.classList.remove("button-disabled");
+          }
+        });
+
+        if (remaining === 0) {
+          if (textarea) {
+            textarea.disabled = true;
+            textarea.placeholder = "Aucune modification automatique restante pour ce post.";
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.add("visible");
+            modificationNote.innerHTML = "Ce post a déjà utilisé sa modification automatique. Vous pouvez encore le valider, mais les boutons de modification sont désormais désactivés.";
+          }
+        } else {
+          if (textarea) {
+            textarea.disabled = false;
+          }
+
+          if (modificationNote) {
+            modificationNote.classList.remove("visible");
+          }
+        }
+
+        return remaining;
+      }
+
+      forms.forEach(function (form) {
+        let statusBox = form.querySelector(".form-status");
+
+        if (!statusBox) {
+          statusBox = document.createElement("div");
+          statusBox.className = "form-status";
+          form.appendChild(statusBox);
+        }
+
+        const actionInput = form.querySelector('input[name="action"]');
+        const actionButtons = form.querySelectorAll("button[data-action]");
+
+        applyModificationState(form);
+
+        actionButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            if (actionInput) {
+              actionInput.value = button.getAttribute("data-action");
+            }
+          });
+        });
+
+        form.addEventListener("submit", function (event) {
+          const action = actionInput ? actionInput.value : "";
+          const remaining = applyModificationState(form);
+
+          if (action !== "validate" && remaining === 0) {
+            event.preventDefault();
+            statusBox.innerHTML = "Aucune modification automatique restante pour ce post.";
+            statusBox.className = "form-status error";
+            return;
+          }
+
+          const textarea = form.querySelector("textarea");
+          const buttons = form.querySelector(".buttons");
+          const allButtons = form.querySelectorAll("button");
+          const statusBadge = form.closest(".post-card").querySelector(".badge.status");
+
+          statusBox.innerHTML = "Envoi en cours...";
+          statusBox.className = "form-status sending";
+
+          setTimeout(function () {
+            allButtons.forEach(function (button) {
+              button.disabled = true;
+              button.style.opacity = "0.6";
+              button.style.cursor = "not-allowed";
+            });
+          }, 50);
+
+          setTimeout(function () {
+            if (textarea) {
+              textarea.style.display = "none";
+            }
+
+            if (buttons) {
+              buttons.style.display = "none";
+            }
+
+            const modificationNote = form.querySelector(".modification-note");
+            if (modificationNote) {
+              modificationNote.style.display = "none";
+            }
+
+            if (action === "validate") {
+              statusBox.innerHTML = "Post validé ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Validé";
+              }
+            } else {
+              statusBox.innerHTML = "Demande envoyée ✅";
+
+              if (statusBadge) {
+                statusBadge.innerHTML = "Modification demandée";
+              }
+
+              const remainingBadge = form.querySelector(".remaining-badge");
+              if (remainingBadge) {
+                remainingBadge.textContent = "0 modification restante";
+              }
+            }
+
+            statusBox.className = "form-status success";
+          }, 900);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
